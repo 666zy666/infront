@@ -1,0 +1,42 @@
+<view class="container">
+  <view class="logo">
+    <image src="/images/logo.png" mode="widthFix" />
+    <text>二手机械交易平台</text>
+  </view>
+
+  <view class="form">
+    <input 
+      placeholder="用户名" 
+      bindinput="onUsernameInput" 
+      value="{{username}}"
+    />
+    <input 
+      placeholder="密码" 
+      password 
+      bindinput="onPasswordInput" 
+      value="{{password}}"
+    />
+    
+    <button type="primary" bindtap="login" loading="{{loading}}">登录</button>
+  </view>
+  <view class="register-link">
+  <text>没有账号？</text>
+  <text bindtap="toRegister" class="link">立即注册</text>
+</view>
+<!-- 微信登录按钮 -->
+<view class="wx-login-section">
+  <view class="divider">
+    <view class="line"></view>
+    <text>或</text>
+    <view class="line"></view>
+  </view>
+  
+  <button class="wx-btn" open-type="getUserInfo" bindgetuserinfo="onWeChatLogin">
+    <image src="/images/wechat.png" class="wx-icon" />
+    <text>微信一键登录</text>
+  </button>
+</view>
+  <view class="tips">
+    <text>测试账号：admin / 123456</text>
+  </view>
+</view>

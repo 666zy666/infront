@@ -1,0 +1,37 @@
+<view class="container">
+  <view class="header">
+    <text>我的收藏 ({{favorites.length}})</text>
+  </view>
+
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:else class="list">
+    <block wx:for="{{favorites}}" wx:key="id">
+      <view class="item" bindtap="toDetail" data-id="{{item.product.id}}">
+        <image 
+          src="{{item.product.images && item.product.images[0] && item.product.images[0].image || '/images/default.jpg'}}" 
+          mode="aspectFill" 
+        />
+        <view class="info">
+          <text class="title">{{item.product.title}}</text>
+          <text class="price">¥{{item.product.price}}</text>
+          <text class="location">{{item.product.location_province}} · {{item.product.location_city || '未知'}}</text>
+        </view>
+        <button 
+          size="mini" 
+          type="warn" 
+          bindtap="removeFavorite" 
+          data-id="{{item.product.id}}"
+        >取消收藏</button>
+      </view>
+    </block>
+
+    <view wx:if="{{!favorites.length}}" class="empty">
+      <image src="/images/empty-favorite.png" mode="widthFix" />
+      <text>您还没有收藏任何商品~</text>
+      <button bindtap="goHome">去首页逛逛</button>
+    </view>
+  </view>
+</view>

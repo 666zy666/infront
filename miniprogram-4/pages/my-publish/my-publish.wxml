@@ -1,0 +1,28 @@
+<view class="container">
+  <view class="header">
+    <text>我的发布 ({{products.length}})</text>
+  </view>
+
+  <view class="list">
+    <block wx:for="{{products}}" wx:key="id">
+      <view class="item" bindtap="toDetail" data-id="{{item.id}}">
+        <image src="{{item.images[0].image}}" mode="aspectFill" />
+        <view class="info">
+          <text class="title">{{item.title}}</text>
+          <text class="price">¥{{item.price}}</text>
+          <text class="status">{{item.is_active ? '上架中' : '已下架'}}</text>
+        </view>
+        <view class="actions">
+          <button size="mini" bindtap="toggleStatus" data-id="{{item.id}}" data-active="{{item.is_active}}">
+            {{item.is_active ? '下架' : '上架'}}
+          </button>
+          <button size="mini" type="warn" bindtap="deleteProduct" data-id="{{item.id}}">删除</button>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{!products.length}}" class="empty">
+      <text>您还没有发布任何商品~</text>
+    </view>
+  </view>
+</view>

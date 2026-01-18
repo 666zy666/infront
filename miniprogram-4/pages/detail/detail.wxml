@@ -1,0 +1,79 @@
+<view class="container">
+  <!-- 轮播图 -->
+  <swiper indicator-dots autoplay interval="4000" duration="500" class="swiper">
+    <block wx:for="{{images}}" wx:key="id">
+      <swiper-item>
+        <image 
+          src="{{item.image}}" 
+          mode="aspectFill" 
+          bindtap="previewImage" 
+          data-url="{{item.image}}" 
+        />
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 价格与收藏 -->
+  <view class="price-bar">
+    <text class="price">¥{{product.price}}</text>
+    <view class="favorite" bindtap="toggleFavorite">
+      <icon type="favorfill" size="48" color="{{isFavorite ? '#ff5000' : '#999'}}" />
+      <text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+    </view>
+  </view>
+
+  <!-- 标题 -->
+  <view class="title">{{product.title}}</view>
+
+  <!-- 核心参数 -->
+  <view class="specs">
+    <view class="spec-item">
+      <text class="label">品牌型号</text>
+      <text class="value">{{product.brand}} {{product.model_number}}</text>
+    </view>
+    <view class="spec-item">
+      <text class="label">出厂年份</text>
+      <text class="value">{{product.manufacture_year || '未知'}}年</text>
+    </view>
+    <view class="spec-item">
+      <text class="label">工作小时</text>
+      <text class="value">{{product.working_hours || '未知'}}小时</text>
+    </view>
+    <view class="spec-item">
+      <text class="label">成色</text>
+      <text class="value">{{product.condition_level}}成新</text>
+    </view>
+    <view class="spec-item">
+      <text class="label">所在地</text>
+      <text class="value">{{product.location_province}} {{product.location_city}}</text>
+    </view>
+  </view>
+
+
+<!-- 卖家信息 -->
+<view class="seller">
+    <image 
+      src="{{product.seller && product.seller.avatar || '/images/default-avatar.png'}}" 
+      class="avatar" 
+    />
+    <view class="info">
+      <text class="name">{{product.seller_username || '匿名卖家'}}</text>
+      <text class="date">发布于 {{product.created_at}}</text>
+    </view>
+  </view>
+
+  <!-- 收藏按钮 -->
+  <view class="favorite-bar">
+    <button bindtap="toggleFavorite" class="{{isFavorite ? 'active' : ''}}">
+      <icon type="favorfill" size="48" color="{{isFavorite ? '#ff5000' : '#999'}}" />
+      <text>{{isFavorite ? '已收藏' : '收藏'}}</text>
+    </button>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="footer">
+    <button class="btn share" open-type="share">分享</button>
+    <button class="btn call" bindtap="callSeller">电话联系</button>
+  </view>
+
+</view>

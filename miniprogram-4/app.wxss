@@ -1,0 +1,62 @@
+/* app.wxss - 全局样式 */
+page {
+  background-color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 32rpx;
+  color: #333333;
+}
+
+/* 全局颜色变量 */
+.text-primary { color: #1296db; }
+.text-danger { color: #ff5000; }
+.text-success { color: #07c160; }
+.text-warning { color: #ffb800; }
+.text-muted { color: #999999; }
+.bg-primary { background-color: #1296db; }
+.bg-white { background-color: #ffffff; }
+
+/* 全局按钮样式 */
+.button-primary {
+  background: #1296db;
+  color: #fff;
+  border-radius: 50rpx;
+}
+.button-danger {
+  background: #ff5000;
+  color: #fff;
+  border-radius: 50rpx;
+}
+
+/* 全局卡片阴影 */
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
+}
+
+/* 加载中动画 */
+.loading {
+  text-align: center;
+  padding: 60rpx 0;
+  color: #999;
+}
+
+/* 空状态 */
+.empty {
+  text-align: center;
+  padding: 200rpx 0;
+  color: #999;
+}
+.empty image {
+  width: 400rpx;
+  opacity: 0.6;
+}
+
+/* 一行文字超出显示省略号 */
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

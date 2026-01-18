@@ -1,0 +1,83 @@
+<view class="container">
+
+<!-- 顶部搜索 + 发布按钮 -->
+<view class="header">
+  <view class="search-bar" bindtap="toSearch">
+    <icon type="search" size="32" color="#999" />
+    <text>搜索品牌、型号、城市...</text>
+  </view>
+  <button class="publish-btn" bindtap="toPublish">发布</button>
+</view>
+
+<!-- 轮播图 -->
+<swiper indicator-dots autoplay class="banner">
+  <swiper-item wx:for="{{banners}}" wx:key="index">
+    <image src="{{item.image}}" mode="aspectFill" />
+  </swiper-item>
+</swiper>
+
+<!-- 分类导航 -->
+<view class="category-grid">
+  <block wx:for="{{categories}}" wx:key="index">
+    <view class="cat-item" bindtap="toCategory" data-type="{{item.type}}">
+      <image src="{{item.icon}}" class="icon" />
+      <text>{{item.name}}</text>
+    </view>
+  </block>
+</view>
+
+<!-- 商品瀑布流 -->
+<view class="product-waterfall">
+  <view class="column">
+    <block wx:for="{{products}}" wx:for-item="item" wx:key="id" wx:if="{{index % 2 === 0}}">
+      <view class="product-card" bindtap="toDetail" data-id="{{item.id}}">
+        <image 
+  src="{{item.images && item.images[0] && item.images[0].image || '/images/default.jpg'}}"
+  mode="aspectFill" 
+/>
+        <view class="info">
+          <text class="title">{{item.title}}</text>
+          <text class="price">¥{{item.price}}</text>
+          <view class="tags">
+            <text class="tag">{{item.brand}}</text>
+            <text class="tag">{{item.condition_level}}成新</text>
+            <text class="tag">{{item.working_hours || 0}}h</text>
+          </view>
+          <text class="location">{{item.location_province}} · {{item.location_city}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+  <view class="column">
+    <block wx:for="{{products}}" wx:for-item="item" wx:key="id" wx:if="{{index % 2 === 1}}">
+      <view class="product-card" bindtap="toDetail" data-id="{{item.id}}">
+        <image 
+  src="{{item.images && item.images[0] && item.images[0].image || '/images/default.jpg'}}"
+  mode="aspectFill" 
+/>
+        <view class="info">
+          <text class="title">{{item.title}}</text>
+          <text class="price">¥{{item.price}}</text>
+          <view class="tags">
+            <text class="tag">{{item.brand}}</text>
+            <text class="tag">{{item.condition_level}}成新</text>
+            <text class="tag">{{item.working_hours || 0}}h</text>
+          </view>
+          <text class="location">{{item.location_province}} · {{item.location_city}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>
+
+<!-- 空状态 -->
+<view wx:if="{{showEmpty}}" class="empty">
+  <image src="/images/empty.png" mode="widthFix" />
+  <text>暂无设备发布~</text>
+</view>
+
+<!-- 加载提示 -->
+<view wx:if="{{loading && products.length > 0}}" class="loading">加载中...</view>
+<view wx:if="{{!hasMore && products.length > 0}}" class="no-more">没有更多了</view>
+
+</view>

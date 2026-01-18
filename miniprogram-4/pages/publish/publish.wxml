@@ -1,0 +1,70 @@
+<view class="container">
+
+<!-- 图片上传区 -->
+<view class="image-section">
+  <view class="image-grid">
+    <block wx:for="{{images}}" wx:key="index">
+      <view class="image-item">
+        <image src="{{item.tempFilePath}}" mode="aspectFill" bindtap="previewImage" data-index="{{index}}" />
+        <icon type="clear" size="36" color="#fff" bindtap="deleteImage" data-index="{{index}}" class="delete" />
+      </view>
+    </block>
+    <view class="upload-btn" bindtap="chooseImage" wx:if="{{images.length < 9}}">
+      <icon type="add" size="60" color="#ccc" />
+      <text>{{images.length}}/9</text>
+    </view>
+  </view>
+  <text class="tip">上传设备实拍图（最多9张）</text>
+</view>
+
+<!-- 表单区 -->
+<view class="form-section">
+
+  <input placeholder="设备标题（必填）" data-key="title" bindinput="inputChange" class="title-input" />
+
+  <view class="price-input">
+    <text class="symbol">¥</text>
+    <input placeholder="价格（必填）" type="digit" data-key="price" bindinput="inputChange" />
+  </view>
+
+  <view class="form-item">
+    <text class="label">设备类型 <text class="required">*</text></text>
+    <view class="types">
+      <block wx:for="{{machineryTypes}}" wx:key="value">
+        <text class="type-tag {{form.machinery_type===item.value ? 'active' : ''}}" 
+              bindtap="selectType" data-type="{{item.value}}">{{item.name}}</text>
+      </block>
+    </view>
+  </view>
+
+  <input placeholder="品牌（如：卡特彼勒、小松）" data-key="brand" bindinput="inputChange" />
+  <input placeholder="型号（如：320D、PC200）" data-key="model_number" bindinput="inputChange" />
+  <input placeholder="出厂年份（如：2020）" type="digit" data-key="manufacture_year" bindinput="inputChange" />
+  <input placeholder="工作小时数（如：8500）" type="digit" data-key="working_hours" bindinput="inputChange" />
+
+  <view class="form-item">
+    <text class="label">成色</text>
+    <view class="conditions">
+      <text class="tag {{form.condition_level==='99' ? 'active' : ''}}" bindtap="selectCondition" data-level="99">99成新</text>
+      <text class="tag {{form.condition_level==='95' ? 'active' : ''}}" bindtap="selectCondition" data-level="95">95成新</text>
+      <text class="tag {{form.condition_level==='90' ? 'active' : ''}}" bindtap="selectCondition" data-level="90">9成新</text>
+      <text class="tag {{form.condition_level==='80' ? 'active' : ''}}" bindtap="selectCondition" data-level="80">8成新</text>
+    </view>
+  </view>
+
+  <view class="form-item">
+  <text class="label">所在地 <text class="required">*</text></text>
+  <input 
+    placeholder="如：广东广州天河区" 
+    data-key="location_province" 
+    bindinput="inputChange" 
+    value="{{form.location_province}}"
+  />
+</view>
+  <textarea placeholder="详细描述设备情况、配置、过户信息等（越多越好）" 
+            data-key="description" bindinput="inputChange" class="description" />
+
+  <button type="primary" size="large" bindtap="submit" class="submit-btn">立即发布</button>
+</view>
+
+</view>

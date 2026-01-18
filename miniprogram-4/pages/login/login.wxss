@@ -1,0 +1,20 @@
+.container { padding: 100rpx 60rpx; background: #f5f5f5; min-height: 100vh; }
+.logo { text-align: center; margin-bottom: 100rpx; }
+.logo image { width: 200rpx; }
+.logo text { display: block; font-size: 40rpx; font-weight: bold; margin-top: 20rpx; }
+.form input { background: #fff; padding: 30rpx; margin-bottom: 30rpx; border-radius: 16rpx; }
+button { margin-top: 60rpx; border-radius: 50rpx; }
+.tips { margin-top: 100rpx; text-align: center; color: #999; }
+.wx-login-section { margin-top: 80rpx; text-align: center; }
+.divider { display: flex; align-items: center; margin: 60rpx 0; color: #999; }
+.line { flex: 1; height: 1rpx; background: #eee; }
+.divider text { padding: 0 40rpx; }
+.wx-btn { 
+  background: #07c160; 
+  color: #fff; 
+  border-radius: 50rpx; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+.wx-icon { width: 40rpx; height: 40rpx; margin-right: 20rpx; }

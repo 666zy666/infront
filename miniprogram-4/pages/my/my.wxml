@@ -1,0 +1,58 @@
+<view class="container">
+
+<!-- 未登录状态 -->
+<block wx:if="{{!hasLogin}}">
+  <view class="unlogin-card" bindtap="toLogin">
+    <image src="/images/default-avatar.png" class="avatar" />
+    <view class="text">
+      <text class="tip">点击登录，解锁更多功能</text>
+      <text class="login-btn">立即登录</text>
+    </view>
+  </view>
+</block>
+
+<!-- 已登录状态 -->
+<block wx:else>
+  <view class="user-card">
+    <image src="{{userInfo.avatarUrl}}" class="avatar" mode="aspectFill" />
+    <view class="info">
+      <text class="nickname">{{userInfo.nickName || '用户'}}</text>
+      <text class="welcome">欢迎回来</text>
+    </view>
+    <button class="logout-btn" size="mini" bindtap="logout">退出</button>
+  </view>
+</block>
+
+<!-- 数据统计 -->
+<view class="stats-grid">
+  <view class="stat-item" bindtap="toMyPublish">
+    <text class="num">{{stats.published}}</text>
+    <text class="label">我的发布</text>
+  </view>
+  <view class="stat-item" bindtap="toMyFavorites">
+    <text class="num">{{stats.favorites}}</text>
+    <text class="label">我的收藏</text>
+  </view>
+  <view class="stat-item">
+    <text class="num">{{stats.orders}}</text>
+    <text class="label">待处理订单</text>
+  </view>
+</view>
+
+<!-- 功能列表 -->
+<view class="menu-list">
+  <view class="menu-item" hover-class="active" bindtap="toAbout">
+    <text class="label">关于我们</text>
+    <icon type="right" size="36" color="#ddd" />
+  </view>
+  <view class="menu-item" hover-class="active">
+    <text class="label">联系客服</text>
+    <icon type="right" size="36" color="#ddd" />
+  </view>
+  <view class="menu-item" hover-class="active">
+    <text class="label">版本更新</text>
+    <text class="version">v1.0.0</text>
+  </view>
+</view>
+
+</view>
