@@ -61,6 +61,21 @@
     value="{{form.location_province}}"
   />
 </view>
+<!-- 联系方式（选填） -->
+<view class="form-item">
+  <text class="label">联系方式</text>
+  <view class="contact-type">
+    <picker bindchange="onContactTypeChange" value="{{contactTypeIndex}}" range="{{contactTypes}}">
+      <view class="picker">{{contactTypes[contactTypeIndex] || '选择类型'}}</view>
+    </picker>
+  </view>
+  <input 
+    placeholder="请输入手机号或微信号" 
+    bindinput="onContactInput" 
+    value="{{form.contact_value}}"
+  />
+  <text class="tip">建议填写手机号，方便买家联系</text>
+</view>
   <textarea placeholder="详细描述设备情况、配置、过户信息等（越多越好）" 
             data-key="description" bindinput="inputChange" class="description" />
 

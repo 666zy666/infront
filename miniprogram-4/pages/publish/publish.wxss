@@ -1,125 +1,34 @@
-/* pages/publish/publish.wxss */
-.container { background: #f5f5f5; min-height: 100vh; }
+.container { background: #f5f5f5; min-height: 100vh; padding-bottom: 200rpx; }
 
-.image-section {
-  background: #fff;
-  padding: 30rpx;
-}
-.image-grid {
-  display: flex;
-  flex-wrap: wrap;
-}
-.image-item {
-  position: relative;
-  margin-right: 20rpx;
-  margin-bottom: 20rpx;
-}
-.image-item image {
-  width: 200rpx;
-  height: 200rpx;
-  border-radius: 16rpx;
-}
-.delete {
-  position: absolute;
-  top: 10rpx;
-  right: 10rpx;
-  background: rgba(0,0,0,0.6);
-  border-radius: 50%;
-  padding: 10rpx;
-}
-.upload-btn {
-  width: 200rpx;
-  height: 200rpx;
-  border: 2rpx dashed #ddd;
-  border-radius: 16rpx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #ccc;
-}
-.tip { color: #999; font-size: 28rpx; margin-top: 20rpx; }
+.image-section { padding: 30rpx; background: #fff; margin-bottom: 20rpx; }
+.image-grid { display: flex; flex-wrap: wrap; }
+.image-item { width: 200rpx; height: 200rpx; margin: 10rpx; position: relative; }
+.image-item image { width: 100%; height: 100%; border-radius: 10rpx; }
+.delete { position: absolute; top: -10rpx; right: -10rpx; background: rgba(0,0,0,0.6); border-radius: 50%; padding: 5rpx; }
+.upload-btn { width: 200rpx; height: 200rpx; margin: 10rpx; background: #f8f8f8; border: 2rpx dashed #ddd; border-radius: 10rpx; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.upload-btn text { font-size: 28rpx; color: #999; margin-top: 10rpx; }
+.tip { font-size: 28rpx; color: #999; display: block; margin-top: 20rpx; text-align: center; }
 
-.form-section {
-  margin-top: 20rpx;
-  background: #fff;
-  padding: 0 30rpx;
-}
-.title-input {
-  font-size: 40rpx;
-  font-weight: bold;
-  padding: 30rpx 0;
-  border-bottom: 1rpx solid #eee;
-}
-.price-input {
-  display: flex;
-  align-items: center;
-  padding: 30rpx 0;
-  border-bottom: 1rpx solid #eee;
-}
-.price-input .symbol {
-  font-size: 48rpx;
-  color: #ff5000;
-  margin-right: 10rpx;
-}
-.price-input input {
-  font-size: 60rpx;
-  font-weight: bold;
-  color: #ff5000;
-}
-
-.form-item {
-  padding: 30rpx 0;
-  border-bottom: 1rpx solid #eee;
-  display: flex;
-  flex-direction: column;
-}
-.label { font-weight: bold; margin-bottom: 20rpx; }
+.form-section { background: #fff; padding: 30rpx; }
+.form-item { margin-bottom: 40rpx; }
+.label { font-size: 32rpx; color: #333; display: block; margin-bottom: 20rpx; }
 .required { color: #ff5000; }
-.types, .conditions {
-  display: flex;
-  flex-wrap: wrap;
-}
-.type-tag, .tag {
-  padding: 16rpx 32rpx;
-  margin: 10rpx 20rpx 10rpx 0;
-  border: 1rpx solid #ddd;
-  border-radius: 50rpx;
-  font-size: 30rpx;
-}
-.type-tag.active, .tag.active {
-  background: #e3f2fd;
-  border-color: #1296db;
-  color: #1296db;
-}
+.title-input { border-bottom: 1rpx solid #eee; padding: 20rpx 0; font-size: 36rpx; }
+.price-input { display: flex; align-items: center; border-bottom: 1rpx solid #eee; padding: 20rpx 0; }
+.symbol { font-size: 48rpx; color: #ff5000; margin-right: 20rpx; }
+input { flex: 1; font-size: 36rpx; }
 
-.picker {
-  padding: 20rpx 0;
-  color: #1296db;
-}
+.types { display: flex; flex-wrap: wrap; }
+.type-tag { padding: 10rpx 30rpx; margin: 10rpx; background: #f0f0f0; border-radius: 50rpx; font-size: 28rpx; color: #666; }
+.type-tag.active { background: #ffebee; color: #ff5000; border: 1rpx solid #ff5000; }
 
-.description {
-  height: 300rpx;
-  padding: 20rpx;
-  background: #f9f9f9;
-  border-radius: 16rpx;
-  margin: 30rpx 0;
-}
+.conditions { display: flex; flex-wrap: wrap; }
+.tag { padding: 10rpx 30rpx; margin: 10rpx; background: #f0f0f0; border-radius: 50rpx; font-size: 28rpx; color: #666; }
+.tag.active { background: #ffebee; color: #ff5000; border: 1rpx solid #ff5000; }
 
-.submit-btn {
-  margin: 60rpx 0;
-  border-radius: 50rpx;
-  font-size: 36rpx;
-}
-.full-input {
-  width: 100%;
-  padding: 20rpx 0;
-  border-bottom: 1rpx solid #eee;
-  margin-top: 20rpx;
-}
-.tip {
-  font-size: 24rpx;
-  color: #999;
-  margin-top: 10rpx;
-  display: block;
-}
+.contact-type { border: 1rpx solid #eee; border-radius: 10rpx; padding: 20rpx; margin-bottom: 20rpx; }
+.picker { color: #333; }
+
+.description { border: 1rpx solid #eee; border-radius: 10rpx; padding: 20rpx; height: 300rpx; margin-bottom: 40rpx; }
+
+.submit-btn { background: #ff5000; color: #fff; border-radius: 50rpx; font-size: 36rpx; }

@@ -1,13 +1,12 @@
 <view class="container">
 
-<!-- 顶部搜索 + 发布按钮 -->
-<view class="header">
-  <view class="search-bar" bindtap="toSearch">
-    <icon type="search" size="32" color="#999" />
-    <text>搜索品牌、型号、城市...</text>
+<!-- 顶部搜索-->
+<navigator url="/pages/search/search" hover-class="none">
+  <view class="search-entry">
+    <icon type="search" size="40" color="#999" />
+    <text class="search-text">搜索设备、品牌、型号...</text>
   </view>
-  <button class="publish-btn" bindtap="toPublish">发布</button>
-</view>
+</navigator>
 
 <!-- 轮播图 -->
 <swiper indicator-dots autoplay class="banner">

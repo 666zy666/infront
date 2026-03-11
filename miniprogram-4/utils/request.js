@@ -1,4 +1,4 @@
-// utils/request.js
+// utils/request.js - 完整版（自动带 Token + 401 过期跳转登录）
 const app = getApp()
 
 function request(url, options = {}) {
@@ -14,7 +14,7 @@ function request(url, options = {}) {
         'Content-Type': 'application/json'
       },
       success(res) {
-        // 401 → 登录过期
+        // 401 未授权 → 跳转登录
         if (res.statusCode === 401) {
           wx.removeStorageSync('token')
           app.globalData.token = ''

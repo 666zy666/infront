@@ -1,4 +1,4 @@
-// pages/my/my.js - 完整修复版（2025年最新，支持实时更新用户名、发布/收藏数字）
+// pages/my/my.js
 const app = getApp()
 
 Page({
@@ -11,7 +11,8 @@ Page({
     stats: {
       published: 0,
       favorites: 0,
-      orders: 0
+      orders: 0,        // 我的订单（买家视角）
+      sellerOrders: 0   // 待处理订单（卖家视角）
     }
   },
 
@@ -19,20 +20,19 @@ Page({
     this.checkLoginStatus()
   },
 
-  // 检查登录状态并更新所有数据
-  checkLoginStatus: function() {
+  checkLoginStatus() {
     const token = wx.getStorageSync('token') || app.globalData.token
-    const savedUserInfo = wx.getStorageSync('userInfo') || {}
+    const userInfo = wx.getStorageSync('userInfo') || {}
 
     if (token) {
       this.setData({
         hasLogin: true,
         userInfo: {
-          nickName: savedUserInfo.nickName || '用户',
-          avatarUrl: savedUserInfo.avatarUrl || '/images/default-avatar.png'
+          nickName: userInfo.nickName || '用户',
+          avatarUrl: userInfo.avatarUrl || '/images/default-avatar.png'
         }
       })
-      this.loadMyData()  // 刷新发布/收藏数字
+      this.loadStats()
     } else {
       this.setData({
         hasLogin: false,
@@ -40,78 +40,101 @@ Page({
           nickName: '未登录',
           avatarUrl: '/images/default-avatar.png'
         },
-        stats: { published: 0, favorites: 0, orders: 0 }
+        stats: { published: 0, favorites: 0, orders: 0, sellerOrders: 0 }
       })
     }
   },
 
-  // 加载我的发布数量（后端） + 我的收藏数量（本地）
-  loadMyData: function() {
+  // 加载所有统计数据
+  loadStats() {
     const token = wx.getStorageSync('token')
-    
-    // 我的发布（后端）
-    if (token) {
-      wx.request({
-        url: app.globalData.baseUrl + 'store/my-products/',
-        header: { 'Authorization': 'Token ' + token },
-        success: (res) => {
-          if (res.statusCode === 200) {
-            this.setData({
-              'stats.published': res.data.length || 0
-            })
-          }
+    if (!token) return
+
+    // 我的发布数量
+    wx.request({
+      url: app.globalData.baseUrl + 'store/my-products/',
+      header: { 'Authorization': 'Token ' + token },
+      success: res => {
+        if (res.statusCode === 200) {
+          this.setData({ 'stats.published': res.data.length || 0 })
         }
-      })
-    }
-  
-    // 我的收藏（云端接口 - 实时读取后端数量）
-    if (token) {
-      wx.request({
-        url: app.globalData.baseUrl + 'store/favorites/',
-        header: { 'Authorization': 'Token ' + token },
-        success: (res) => {
-          if (res.statusCode === 200) {
-            this.setData({
-              'stats.favorites': res.data.length || 0
-            })
-          }
+      }
+    })
+
+    // 我的收藏数量
+    wx.request({
+      url: app.globalData.baseUrl + 'store/favorites/',
+      header: { 'Authorization': 'Token ' + token },
+      success: res => {
+        if (res.statusCode === 200) {
+          this.setData({ 'stats.favorites': res.data.length || 0 })
         }
-      })
-    } else {
-      // 无 token 时本地兜底（可选）
-      const favorites = wx.getStorageSync('favorites') || []
-      this.setData({ 'stats.favorites': favorites.length || 0 })
-    }
+      }
+    })
+
+    // 我的订单数量（买家视角）
+    wx.request({
+      url: app.globalData.baseUrl + 'store/orders/my/',
+      header: { 'Authorization': 'Token ' + token },
+      success: res => {
+        if (res.statusCode === 200) {
+          this.setData({ 'stats.orders': res.data.length || 0 })
+        }
+      }
+    })
+
+    // 待处理订单数量（卖家视角）
+    wx.request({
+      url: app.globalData.baseUrl + 'store/orders/seller/',
+      header: { 'Authorization': 'Token ' + token },
+      success: res => {
+        if (res.statusCode === 200) {
+          this.setData({ 'stats.sellerOrders': res.data.length || 0 })
+        }
+      }
+    })
   },
 
   // 跳转登录
-  toLogin: function() {
+  toLogin() {
     wx.navigateTo({ url: '/pages/login/login' })
   },
 
-  // 跳转我的发布
-  toMyPublish: function() {
-    wx.navigateTo({ url: '/pages/my-publish/my-publish' })
-  },
-
-  // 跳转我的收藏
-  toMyFavorites: function() {
-    wx.navigateTo({ url: '/pages/my-favorites/my-favorites' })
-  },
-
   // 退出登录
-  logout: function() {
+  logout() {
     wx.showModal({
-      title: '确认退出？',
+      title: '确认退出',
       content: '退出后需重新登录',
-      success: (res) => {
+      success: res => {
         if (res.confirm) {
           wx.removeStorageSync('token')
           wx.removeStorageSync('userInfo')
           app.globalData.token = ''
-          this.checkLoginStatus()  // 立即刷新页面和数字
+          app.globalData.userInfo = null
+          this.checkLoginStatus()
         }
       }
     })
+  },
+
+  // 跳转页面
+  toMyPublish() {
+    wx.navigateTo({ url: '/pages/my-publish/my-publish' })
+  },
+
+  toMyFavorites() {
+    wx.navigateTo({ url: '/pages/my-favorites/my-favorites' })
+  },
+
+  toMyOrders() {
+    wx.navigateTo({ url: '/pages/my-orders/my-orders' })
+  },
+
+  toSellerOrders() {
+    wx.navigateTo({ url: '/pages/seller-orders/seller-orders' })
+  },
+
+  toSettings() {
+    wx.showToast({ title: '设置功能开发中', icon: 'none' })
   }
 })

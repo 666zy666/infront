@@ -1,0 +1,71 @@
+<view class="container">
+  <view class="header">
+    <text>我的订单</text>
+    <text class="total">共 {{orders.length}} 个</text>
+  </view>
+
+  <view class="order-list">
+    <block wx:for="{{orders}}" wx:key="id">
+      <view class="order-card" bindtap="toOrderDetail" data-id="{{item.id}}">
+        <!-- 商品信息 -->
+        <view class="product">
+          <image 
+            src="{{item.product_image || '/images/default.jpg'}}" 
+            mode="aspectFill" 
+            class="thumb" 
+          />
+          <view class="info">
+            <text class="title">{{item.product_title}}</text>
+            <text class="seller">卖家：{{item.seller_username || '匿名'}}</text>
+            <text class="price">¥{{item.price}}</text>
+          </view>
+        </view>
+
+        <!-- 状态与时间 -->
+        <view class="status-bar">
+          <text class="status {{item.status}}">
+            {{item.status === 'pending' ? '待支付' : 
+              item.status === 'paid' ? '已支付' : 
+              item.status === 'shipped' ? '已发货' : 
+              item.status === 'completed' ? '已完成' : '已取消'}}
+          </text>
+          <text class="time">{{item.created_at | formatDate}}</text>
+        </view>
+
+        <!-- 操作按钮（根据状态显示） -->
+        <view class="actions">
+          <button 
+            wx:if="{{item.status === 'paid' || item.status === 'shipped'}}" 
+            class="track-btn" 
+            bindtap="viewTracking" 
+            data-id="{{item.id}}"
+          >查看物流</button>
+          <button 
+            wx:if="{{item.status === 'shipped'}}" 
+            class="confirm-btn" 
+            bindtap="confirmReceive" 
+            data-id="{{item.id}}"
+          >确认收货</button>
+          <text 
+            wx:if="{{item.status === 'completed' || item.status === 'cancelled'}}" 
+            class="no-action"
+          >
+            {{item.status === 'completed' ? '交易完成' : '订单已取消'}}
+          </text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{!orders.length && !loading}}" class="empty">
+      <image src="/images/empty-order.png" mode="widthFix" />
+      <text>暂无订单记录</text>
+      <button bindtap="goHome">去首页逛逛</button>
+    </view>
+
+    <!-- 加载中 -->
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+  </view>
+</view>

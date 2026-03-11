@@ -1,77 +1,93 @@
-<view class="container">
-
-<!-- 搜索栏 -->
-<view class="search-bar">
-  <input 
-    placeholder="搜索品牌、型号、标题..." 
-    value="{{keyword}}" 
-    bindinput="onSearchInput"
-    bindconfirm="onSearchConfirm"
-    focus="{{true}}"
-  />
-  <button size="mini" bindtap="onSearchConfirm">搜索</button>
-  <text bindtap="toggleFilters" class="filter-btn">筛选</text>
-</view>
-
-<!-- 筛选面板 -->
-<view class="filter-panel" wx:if="{{showFilters}}">
-  <view class="filter-title">筛选条件 <text bindtap="resetFilters">重置</text></view>
-  
-  <view class="filter-item">
-    <text>设备类型</text>
-    <picker bindchange="onFilterChange" data-key="machinery_type" value="{{filters.machinery_type}}">
-      <view>{{filters.machinery_type ? filters.machinery_type : '不限'}}</view>
-    </picker>
+<view class="search-container">
+  <!-- 搜索栏（固定顶部） -->
+  <view class="search-bar">
+    <input 
+      placeholder="搜索设备、品牌、型号..." 
+      value="{{keyword}}" 
+      bindinput="onInput" 
+      bindconfirm="onSearch" 
+      confirm-type="search"
+      focus="{{inputFocus}}" 
+      cursor-spacing="200"
+      adjust-position="true"
+      hold-keyboard="false"
+      class="search-input"
+    />
+    
+    <button bindtap="onSearch" class="search-btn">搜索</button>
   </view>
 
-  <view class="filter-item">
-    <text>价格区间</text>
-    <input placeholder="最低价" data-key="min_price" bindinput="onFilterChange" />
-    <text> - </text>
-    <input placeholder="最高价" data-key="max_price" bindinput="onFilterChange" />
-  </view>
-
-  <view class="filter-item">
-    <text>所在省份</text>
-    <input placeholder="如：广东" data-key="province" bindinput="onFilterChange" />
-  </view>
-
-  <view class="filter-item">
-    <text>工作小时</text>
-    <input placeholder="最低" data-key="min_hours" bindinput="onFilterChange" />
-    <text> - </text>
-    <input placeholder="最高" data-key="max_hours" bindinput="onFilterChange" />
-  </view>
-
-  <button type="primary" bindtap="applyFilters">应用筛选</button>
-</view>
-
-<!-- 商品列表 -->
-<view class="product-grid">
-  <block wx:for="{{products}}" wx:key="id">
-    <view class="product-card" bindtap="toDetail" data-id="{{item.id}}">
-      <image 
-  src="{{item.images && item.images[0] && item.images[0].image || '/images/default.jpg'}}"
-  mode="aspectFill" 
-/>
-      <view class="info">
-        <text class="title">{{item.title}}</text>
-        <text class="price">¥{{item.price}}</text>
-        <text class="desc">{{item.brand}} {{item.model_number}}</text>
-        <text class="location">{{item.location_province}} • {{item.working_hours || '未知'}}小时</text>
-      </view>
+  <!-- 搜索历史 -->
+  <view class="history-section" wx:if="{{!searchMode && history.length > 0}}">
+    <view class="section-header">
+      <text>搜索历史</text>
+      <text bindtap="clearHistory" class="clear-history">清空</text>
     </view>
-  </block>
-</view>
+    <view class="history-tags">
+      <block wx:for="{{history}}" wx:key="*this">
+        <view class="history-tag" bindtap="useHistory" data-keyword="{{item}}">
+          {{item}}
+        </view>
+      </block>
+    </view>
+  </view>
 
-<!-- 空状态 -->
-<view wx:if="{{!loading && products.length === 0}}" class="empty">
-  <image src="/images/empty.png" mode="widthFix" />
-  <text>暂无相关设备，再试试其他关键词吧~</text>
-</view>
+  <!-- 搜索建议 -->
+  <view class="suggest-section" wx:if="{{keyword && suggestList.length > 0 && !searchMode}}">
+    <block wx:for="{{suggestList}}" wx:key="*this">
+      <view class="suggest-item" bindtap="useSuggest" data-keyword="{{item}}">
+        {{item}}
+      </view>
+    </block>
+  </view>
 
-<!-- 加载提示 -->
-<view wx:if="{{loading}}" class="loading">加载中...</view>
-<view wx:if="{{!hasMore && products.length > 0}}" class="no-more">没有更多了</view>
+  <!-- 筛选条件 -->
+  <view class="filter-bar" wx:if="{{searchMode}}">
+    <picker 
+      bindchange="onCategoryChange" 
+      value="{{categoryIndex}}" 
+      range="{{categories}}"
+    >
+      <view class="picker">分类：{{categories[categoryIndex] || '全部'}}</view>
+    </picker>
 
+    <picker 
+      bindchange="onSortChange" 
+      value="{{sortIndex}}" 
+      range="{{sortOptions}}"
+    >
+      <view class="picker">排序：{{sortOptions[sortIndex]}}</view>
+    </picker>
+
+    <button bindtap="resetFilter" class="reset-btn">重置</button>
+  </view>
+
+  <!-- 搜索结果 -->
+  <scroll-view scroll-y class="result-scroll" wx:if="{{searchMode}}">
+    <view wx:if="{{products.length === 0 && !loading}}" class="empty-result">
+      <image src="/images/empty-search.png" mode="widthFix" />
+      <text>暂无匹配结果</text>
+    </view>
+
+    <view class="product-grid">
+      <block wx:for="{{products}}" wx:key="id">
+        <view class="product-item" bindtap="toDetail" data-id="{{item.id}}">
+          <image 
+            src="{{item.images && item.images.length > 0 ? item.images[0].image : '/images/default.jpg'}}" 
+            mode="aspectFill" 
+            class="product-img"
+          />
+          <view class="product-info">
+            <text class="title">{{item.title}}</text>
+            <text class="price">¥{{item.price}}</text>
+            <text class="location">{{item.location_province || '未知地区'}}</text>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+  </scroll-view>
 </view>

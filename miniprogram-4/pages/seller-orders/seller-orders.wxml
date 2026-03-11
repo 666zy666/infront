@@ -1,0 +1,93 @@
+<view class="container">
+  <view class="header">
+    <text>待处理订单</text>
+    <text class="total">共 {{orders.length}} 个</text>
+  </view>
+
+  <view class="order-list">
+    <block wx:for="{{orders}}" wx:key="id">
+      <view class="order-card">
+        <!-- 商品信息 -->
+        <view class="product-info">
+          <image 
+            src="{{item.product_image || '/images/default.jpg'}}" 
+            mode="aspectFill" 
+            class="thumb" 
+          />
+          <view class="detail">
+            <text class="title">{{item.product_title}}</text>
+            <text class="buyer">买家：{{item.buyer || '匿名用户'}}</text>
+            <text class="price">¥{{item.price}}</text>
+          </view>
+        </view>
+
+        <!-- 订单状态 -->
+        <view class="status-bar">
+          <text class="status {{item.status}}">
+            {{item.status === 'pending' ? '待支付' : 
+              item.status === 'paid' ? '已支付' : 
+              item.status === 'shipped' ? '已发货' : 
+              item.status === 'completed' ? '已完成' : '已取消'}}
+          </text>
+          <text class="time">{{item.created_at | formatDate}}</text>
+        </view>
+
+        <!-- 操作按钮区 -->
+        <view class="actions">
+          <!-- 已支付 → 发货 -->
+          <view wx:if="{{item.status === 'paid'}}" class="ship-form">
+            <input 
+              placeholder="物流公司（如：顺丰）" 
+              bindinput="inputChange" 
+              data-id="{{item.id}}" 
+              data-field="shipping_company" 
+              value="{{tempData[item.id].shipping_company}}"
+            />
+            <input 
+              placeholder="物流单号" 
+              bindinput="inputChange" 
+              data-id="{{item.id}}" 
+              data-field="tracking_number" 
+              value="{{tempData[item.id].tracking_number}}"
+            />
+            <button 
+              class="ship-btn" 
+              bindtap="shipOrder" 
+              data-id="{{item.id}}"
+            >确认发货</button>
+          </view>
+
+          <!-- 已发货 → 完成 -->
+          <button 
+            wx:if="{{item.status === 'shipped'}}" 
+            class="complete-btn" 
+            bindtap="completeOrder" 
+            data-id="{{item.id}}"
+          >确认完成</button>
+
+          <!-- 待支付 → 取消 -->
+          <button 
+            wx:if="{{item.status === 'pending'}}" 
+            class="cancel-btn" 
+            bindtap="cancelOrder" 
+            data-id="{{item.id}}"
+          >取消订单</button>
+
+          <!-- 已完成/已取消 → 无操作 -->
+          <text wx:if="{{item.status === 'completed' || item.status === 'cancelled'}}" class="no-action">
+            {{item.status === 'completed' ? '交易完成' : '订单已取消'}}
+          </text>
+        </view>
+      </view>
+    </block>
+
+    <view wx:if="{{!orders.length && !loading}}" class="empty">
+      <image src="/images/empty-order.png" mode="widthFix" />
+      <text>暂无待处理订单</text>
+    </view>
+
+    <view wx:if="{{loading}}" class="loading">
+      <text>加载中...</text>
+    </view>
+  </view>
+</view>

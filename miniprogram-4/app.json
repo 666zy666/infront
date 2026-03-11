@@ -8,7 +8,9 @@
     "pages/login/login",
     "pages/register/register",
     "pages/my-favorites/my-favorites",
-    "pages/my-publish/my-publish"
+    "pages/my-publish/my-publish",
+    "pages/my-orders/my-orders",
+    "pages/seller-orders/seller-orders"
   ],
   "window": {
     "backgroundTextStyle": "light",
