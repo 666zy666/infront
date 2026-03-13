@@ -8,7 +8,7 @@
       bindconfirm="onSearch" 
       confirm-type="search"
       focus="{{inputFocus}}" 
-      cursor-spacing="200"
+      cursor-spacing="220"
       adjust-position="true"
       hold-keyboard="false"
       class="search-input"
@@ -46,9 +46,10 @@
     <picker 
       bindchange="onCategoryChange" 
       value="{{categoryIndex}}" 
+      range-key="name" 
       range="{{categories}}"
     >
-      <view class="picker">分类：{{categories[categoryIndex] || '全部'}}</view>
+      <view class="picker">分类：{{categories[categoryIndex].name || '全部'}}</view>
     </picker>
 
     <picker 
@@ -61,33 +62,35 @@
 
     <button bindtap="resetFilter" class="reset-btn">重置</button>
   </view>
-
+ 
   <!-- 搜索结果 -->
   <scroll-view scroll-y class="result-scroll" wx:if="{{searchMode}}">
-    <view wx:if="{{products.length === 0 && !loading}}" class="empty-result">
-      <image src="/images/empty-search.png" mode="widthFix" />
-      <text>暂无匹配结果</text>
-    </view>
+  <!-- 空结果 -->
+  <view wx:if="{{products.length === 0 && !loading}}" class="empty-result">
+    <image src="/images/empty-search.png" mode="widthFix" />
+    <text>暂无匹配结果</text>
+  </view>
 
-    <view class="product-grid">
-      <block wx:for="{{products}}" wx:key="id">
-        <view class="product-item" bindtap="toDetail" data-id="{{item.id}}">
-          <image 
-            src="{{item.images && item.images.length > 0 ? item.images[0].image : '/images/default.jpg'}}" 
-            mode="aspectFill" 
-            class="product-img"
-          />
-          <view class="product-info">
-            <text class="title">{{item.title}}</text>
-            <text class="price">¥{{item.price}}</text>
-            <text class="location">{{item.location_province || '未知地区'}}</text>
-          </view>
+  <!-- 商品列表 -->
+  <view class="product-grid" wx:if="{{products.length > 0}}">
+    <block wx:for="{{products}}" wx:key="id">
+      <view class="product-item" bindtap="toDetail" data-id="{{item.id}}">
+        <image 
+          src="{{item.images && item.images.length > 0 ? item.images[0].image : '/images/default.jpg'}}" 
+          mode="aspectFill" 
+          class="product-img"
+        />
+        <view class="product-info">
+          <text class="title">{{item.title}}</text>
+          <text class="price">¥{{item.price}}</text>
+          <text class="location">{{item.location_province || '未知地区'}}</text>
         </view>
-      </block>
-    </view>
+      </view>
+    </block>
+  </view>
 
-    <view wx:if="{{loading}}" class="loading">
-      <text>加载中...</text>
-    </view>
-  </scroll-view>
+  <view wx:if="{{loading}}" class="loading">
+    <text>加载中...</text>
+  </view>
+</scroll-view>
 </view>

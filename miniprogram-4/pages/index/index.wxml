@@ -9,20 +9,44 @@
 </navigator>
 
 <!-- 轮播图 -->
-<swiper indicator-dots autoplay class="banner">
-  <swiper-item wx:for="{{banners}}" wx:key="index">
-    <image src="{{item.image}}" mode="aspectFill" />
-  </swiper-item>
+<swiper 
+  indicator-dots="{{indicatorDots}}" 
+  autoplay="{{autoplay}}" 
+  interval="{{interval}}" 
+  duration="{{duration}}" 
+  circular="{{circular}}"
+>
+  <block wx:for="{{banners}}" wx:key="id">
+    <swiper-item bindtap="onBannerTap" data-banner="{{item}}">
+      <image 
+        src="{{item.image}}" 
+        mode="aspectFill" 
+        class="banner-img"
+      />
+      <!-- 可选标题 -->
+      <view class="banner-title" wx:if="{{item.title}}">{{item.title}}</view>
+    </swiper-item>
+  </block>
+
+  <!-- 无轮播图占位 -->
+  <block wx:if="{{!banners || banners.length === 0}}">
+    <swiper-item>
+      <image src="/images/banner-placeholder.jpg" mode="aspectFill" class="banner-img" />
+    </swiper-item>
+  </block>
 </swiper>
 
 <!-- 分类导航 -->
-<view class="category-grid">
-  <block wx:for="{{categories}}" wx:key="index">
-    <view class="cat-item" bindtap="toCategory" data-type="{{item.type}}">
-      <image src="{{item.icon}}" class="icon" />
-      <text>{{item.name}}</text>
-    </view>
-  </block>
+<view class="category-section">
+  <text class="section-title">设备分类</text>
+  <view class="category-grid">
+    <block wx:for="{{categories}}" wx:key="name">
+      <view class="category-item" bindtap="toCategory" data-index="{{index}}">
+        <image src="{{item.icon}}" mode="aspectFit" class="cat-icon" />
+        <text>{{item.name}}</text>
+      </view>
+    </block>
+  </view>
 </view>
 
 <!-- 商品瀑布流 -->
