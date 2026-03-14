@@ -8,10 +8,24 @@
     </block>
   </swiper>
 
-  <!-- 价格与标题 -->
+  <!-- 价格与标题 + 收藏按钮 -->
   <view class="info">
-    <view class="price">¥{{product.price}}</view>
-    <view class="title">{{product.title}}</view>
+    <view class="title-section">
+      <view class="title-price">
+        <view class="price">¥{{product.price}}</view>
+        <view class="title">{{product.title}}</view>
+      </view>
+      
+      <!-- 新增：收藏按钮 -->
+      <view class="favorite-btn" bindtap="toggleFavorite">
+        <image 
+          src="{{isFavorited ? '/images/favorite-filled.png' : '/images/favorite-empty.png'}}" 
+          mode="aspectFit" 
+          class="favorite-icon"
+        />
+        <text class="favorite-text">{{isFavorited ? '已收藏' : '收藏'}}</text>
+      </view>
+    </view>
   </view>
 
   <!-- 参数列表 -->
@@ -61,9 +75,10 @@
     <text>卖家：{{product.seller_username}}</text>
     <text>发布时间：{{product.created_at | formatDate}}</text>
   </view>
+  
   <!-- 底部固定操作栏 -->
-<view class="fixed-bottom">
-  <view class="price">¥{{product.price}}</view>
-  <button class="buy-btn" bindtap="buyNow">立即购买</button>
-</view>
+  <view class="fixed-bottom">
+    <view class="price">¥{{product.price}}</view>
+    <button class="buy-btn" bindtap="buyNow">立即购买</button>
+  </view>
 </view>

@@ -1,4 +1,5 @@
 // pages/detail/detail.js
+const { request } = require('../../utils/request.js')
 const app = getApp()
 
 Page({
@@ -6,8 +7,10 @@ Page({
     id: null,
     product: {},
     images: [],
-    loading: true
+    loading: true,
+    isFavorited: false, 
   },
+  
 
   onLoad(options) {
     this.setData({ id: options.id })
@@ -115,6 +118,37 @@ buyNow() {
         })
       }
     }
+  })
+},
+toggleFavorite() {
+  const token = wx.getStorageSync('token')
+  if (!token) {
+    wx.showToast({ title: '请先登录', icon: 'none' })
+    wx.navigateTo({ url: '/pages/login/login' })
+    return
+  }
+
+  const productId = this.data.product.id
+  const isFavorited = this.data.isFavorited
+  const url = isFavorited ? `store/favorites/remove/${productId}/` : `store/favorites/add/`
+  const method = isFavorited ? 'DELETE' : 'POST'
+
+  request(url, {
+    method,
+    data: isFavorited ? {} : { product: productId },
+    header: { 'Authorization': `Token ${token}` }
+  }).then(res => {
+    if (res.statusCode === 201 || res.statusCode === 204) {
+      this.setData({ isFavorited: !isFavorited })
+      wx.showToast({
+        title: isFavorited ? '取消收藏成功' : '收藏成功',
+        icon: 'success'
+      })
+    } else {
+      wx.showToast({ title: '操作失败', icon: 'none' })
+    }
+  }).catch(err => {
+    wx.showToast({ title: '网络错误', icon: 'none' })
   })
 },
 
