@@ -1,0 +1,18 @@
+<view class="container">
+  <view class="form-group">
+    <text class="label">用户名</text>
+    <input value="{{user.username}}" disabled class="disabled-input" />
+  </view>
+
+  <view class="form-group">
+    <text class="label">邮箱</text>
+    <input value="{{user.email}}" bindinput="inputChange" data-field="email" placeholder="请输入邮箱" />
+  </view>
+
+  <view class="form-group">
+    <text class="label">姓名</text>
+    <input value="{{user.first_name}}" bindinput="inputChange" data-field="first_name" placeholder="请输入姓名" />
+  </view>
+
+  <button class="save-btn" bindtap="saveProfile" loading="{{saving}}">保存修改</button>
+</view>

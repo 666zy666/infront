@@ -10,7 +10,13 @@
     "pages/my-favorites/my-favorites",
     "pages/my-publish/my-publish",
     "pages/my-orders/my-orders",
-    "pages/seller-orders/seller-orders"
+    "pages/seller-orders/seller-orders",
+    "pages/profile/edit-profile",
+    "pages/profile/change-password"
+   
+    
+
+
   ],
   "window": {
     "backgroundTextStyle": "light",

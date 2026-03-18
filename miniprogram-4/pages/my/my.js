@@ -136,5 +136,18 @@ Page({
 
   toSettings() {
     wx.showToast({ title: '设置功能开发中', icon: 'none' })
-  }
+  },
+  // 个人信息编辑
+editProfile() {
+  wx.navigateTo({
+    url: '/pages/profile/edit-profile'
+  })
+},
+
+// 修改密码
+changePassword() {
+  wx.navigateTo({
+    url: '/pages/profile/change-password'
+  })
+},
 })

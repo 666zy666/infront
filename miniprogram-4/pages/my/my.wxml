@@ -60,6 +60,19 @@
       <icon type="shop" size="56" color="#fa8c16" />
       <text>待处理订单</text>
     </view>
+
+    <!-- 新增：个人信息编辑 -->
+    <view class="menu-item" hover-class="hover" bindtap="editProfile">
+      <icon type="profile" size="56" color="#07c160" />
+      <text>个人信息</text>
+    </view>
+
+    <!-- 新增：修改密码 -->
+    <view class="menu-item" hover-class="hover" bindtap="changePassword">
+      <icon type="lock" size="56" color="#fa8c16" />
+      <text>修改密码</text>
+    </view>
+
     <view class="menu-item" hover-class="hover" bindtap="toSettings">
       <icon type="setting" size="56" color="#969799" />
       <text>设置</text>
