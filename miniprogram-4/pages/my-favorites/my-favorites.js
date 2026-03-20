@@ -72,7 +72,7 @@ Page({
                 const pages = getCurrentPages()
                 const myPage = pages.find(p => p.route === 'pages/my/my')
                 if (myPage) {
-                  myPage.loadMyData()  // 重新计算收藏数量
+                  myPage.loadStats()  // 重新计算收藏数量
                 }
               } else {
                 wx.showToast({ title: '取消失败', icon: 'none' })

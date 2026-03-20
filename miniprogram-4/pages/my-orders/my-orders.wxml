@@ -1,66 +1,68 @@
 <view class="container">
-  <view class="header">
-    <text>我的订单</text>
-    <text class="total">共 {{orders.length}} 个</text>
-  </view>
+  <!-- Tab 栏 -->
+  <scroll-view class="tab-bar" scroll-x="true">
+    <view class="tab-list">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="key"
+        class="tab-item {{currentTab === index ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-index="{{index}}"
+      >{{item.label}}</view>
+    </view>
+  </scroll-view>
 
+  <!-- 订单列表 -->
   <view class="order-list">
     <block wx:for="{{orders}}" wx:key="id">
-      <view class="order-card" bindtap="toOrderDetail" data-id="{{item.id}}">
+      <view class="order-card">
+        <!-- 状态行 -->
+        <view class="card-header">
+          <text class="order-no">订单号：{{item.id}}</text>
+          <text class="order-status" style="color:{{item._statusColor}}">{{item._statusText}}</text>
+        </view>
+
         <!-- 商品信息 -->
-        <view class="product">
-          <image 
-            src="{{item.product_image || '/images/default.jpg'}}" 
-            mode="aspectFill" 
-            class="thumb" 
+        <view class="product" bindtap="toOrderDetail" data-id="{{item.id}}">
+          <image
+            src="{{item.product_image || '/images/cat/all.png'}}"
+            mode="aspectFill"
+            class="thumb"
           />
           <view class="info">
-            <text class="title">{{item.product_title}}</text>
-            <text class="seller">卖家：{{item.seller_username || '匿名'}}</text>
-            <text class="price">¥{{item.price}}</text>
+            <text class="title ellipsis">{{item.product_title || item.product_name || '商品'}}</text>
+            <text class="seller">卖家：{{item.seller_username || item.seller || '匿名'}}</text>
+            <text class="price">¥{{item.price || item.total_price}}</text>
+            <text class="time">{{item.created_at}}</text>
           </view>
         </view>
 
-        <!-- 状态与时间 -->
-        <view class="status-bar">
-          <text class="status {{item.status}}">
-            {{item.status === 'pending' ? '待支付' : 
-              item.status === 'paid' ? '已支付' : 
-              item.status === 'shipped' ? '已发货' : 
-              item.status === 'completed' ? '已完成' : '已取消'}}
-          </text>
-          <text class="time">{{item.created_at | formatDate}}</text>
-        </view>
-
-        <!-- 操作按钮（根据状态显示） -->
+        <!-- 操作按钮 -->
         <view class="actions">
-          <button 
-            wx:if="{{item.status === 'paid' || item.status === 'shipped'}}" 
-            class="track-btn" 
-            bindtap="viewTracking" 
-            data-id="{{item.id}}"
-          >查看物流</button>
-          <button 
-            wx:if="{{item.status === 'shipped'}}" 
-            class="confirm-btn" 
-            bindtap="confirmReceive" 
-            data-id="{{item.id}}"
-          >确认收货</button>
-          <text 
-            wx:if="{{item.status === 'completed' || item.status === 'cancelled'}}" 
-            class="no-action"
-          >
-            {{item.status === 'completed' ? '交易完成' : '订单已取消'}}
-          </text>
+          <!-- 待付款：支付 + 取消 -->
+          <block wx:if="{{item._status === 'PENDING_PAYMENT'}}">
+            <button class="btn btn-cancel" bindtap="handleCancel" data-id="{{item.id}}">取消订单</button>
+            <button class="btn btn-pay" bindtap="handlePay" data-id="{{item.id}}">立即支付</button>
+          </block>
+
+          <!-- 待收货：确认收货 -->
+          <block wx:elif="{{item._status === 'PENDING_RECEIPT'}}">
+            <button class="btn btn-confirm" bindtap="handleConfirm" data-id="{{item.id}}">确认收货</button>
+          </block>
+
+          <!-- 其他：查看详情 -->
+          <block wx:else>
+            <button class="btn btn-detail" bindtap="toOrderDetail" data-id="{{item.id}}">查看详情</button>
+          </block>
         </view>
       </view>
     </block>
 
     <!-- 空状态 -->
     <view wx:if="{{!orders.length && !loading}}" class="empty">
-      <image src="/images/empty-order.png" mode="widthFix" />
-      <text>暂无订单记录</text>
-      <button bindtap="goHome">去首页逛逛</button>
+      <text class="empty-icon">📦</text>
+      <text class="empty-text">暂无订单记录</text>
+      <button class="btn btn-home" bindtap="goHome">去首页逛逛</button>
     </view>
 
     <!-- 加载中 -->

@@ -32,74 +32,99 @@
   border-radius: 12rpx;
 }
 
+.category-section {
+  background: #fff;
+  margin: 20rpx;
+  border-radius: 20rpx;
+  padding: 20rpx 10rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0,0,0,0.04);
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  padding: 10rpx 30rpx 20rpx;
+  display: block;
+}
+
 .category-grid {
   display: flex;
   flex-wrap: wrap;
-  padding: 30rpx;
-  background: #fff;
+  padding: 0 10rpx;
 }
-.cat-item {
+
+.category-item {
   width: 25%;
   text-align: center;
-  margin-bottom: 40rpx;
+  padding: 20rpx 0;
 }
-.cat-item .icon {
-  width: 100rpx;
-  height: PEN100rpx;
-}
-.cat-item text {
+
+.cat-icon {
+  width: 96rpx;
+  height: 96rpx;
   display: block;
-  margin-top: 10rpx;
-  font-size: 28rpx;
+  margin: 0 auto 12rpx;
+}
+
+.category-item text {
+  display: block;
+  font-size: 26rpx;
+  color: #333;
 }
 
 .product-waterfall {
   display: flex;
-  padding: 20rpx;
+  padding: 0 16rpx;
 }
 .column { flex: 1; }
 .product-card {
   background: #fff;
   border-radius: 20rpx;
   overflow: hidden;
-  margin: 0 10rpx 30rpx;
+  margin: 0 8rpx 24rpx;
   box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.05);
 }
 .product-card image {
   width: 100%;
-  height: 100%;
+  height: 260rpx;
+  display: block;
+  background: #f5f5f5;
 }
 .info {
-  padding: 20rpx;
+  padding: 16rpx 20rpx;
 }
 .title {
   font-weight: bold;
   display: block;
   margin-bottom: 10rpx;
+  font-size: 28rpx;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .price {
   color: #ff5000;
-  font-size: 40rpx;
+  font-size: 36rpx;
   font-weight: bold;
 }
 .tags {
-  margin: 16rpx 0;
+  margin: 12rpx 0;
 }
 .tag {
   display: inline-block;
-  padding: 4rpx 16rpx;
-  margin-right: 12rpx;
+  padding: 4rpx 12rpx;
+  margin-right: 8rpx;
   background: #f0f0f0;
   border-radius: 8rpx;
-  font-size: 24rpx;
+  font-size: 22rpx;
   color: #666;
 }
 .location {
   color: #999;
-  font-size: 28rpx;
+  font-size: 24rpx;
+  margin-top: 8rpx;
+  display: block;
 }
 
 .empty, .loading, .no-more {

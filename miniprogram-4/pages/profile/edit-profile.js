@@ -16,6 +16,24 @@ Page({
   onLoad() {
     const userInfo = wx.getStorageSync('userInfo') || {}
     this.setData({ user: userInfo })
+    // Refresh from backend
+    const token = wx.getStorageSync('token')
+    if (token) {
+      request('account/profile/', {}).then(res => {
+        if (res.statusCode === 200 && res.data) {
+          const d = res.data
+          this.setData({
+            user: {
+              username: d.username || userInfo.username || '',
+              email: d.email || userInfo.email || '',
+              first_name: d.first_name || userInfo.first_name || '',
+              avatarUrl: d.avatar || userInfo.avatarUrl || '',
+              is_staff: d.is_staff || false
+            }
+          })
+        }
+      }).catch(() => {})
+    }
   },
 
   // ==================== 点击头像上传 ====================
@@ -75,16 +93,26 @@ Page({
         username: this.data.user.username,
         email: this.data.user.email,
         first_name: this.data.user.first_name
-      },
-      header: { 'Authorization': `Token ${token}` }
+      }
     }).then(res => {
       if (res.statusCode === 200) {
-        wx.setStorageSync('userInfo', res.data)
+        const d = res.data
+        const newInfo = {
+          username: d.username || this.data.user.username,
+          email: d.email || this.data.user.email,
+          first_name: d.first_name || this.data.user.first_name,
+          avatarUrl: d.avatar || this.data.user.avatarUrl,
+          is_staff: d.is_staff || false
+        }
+        wx.setStorageSync('userInfo', newInfo)
+        app.globalData.userInfo = newInfo
         wx.showToast({ title: '保存成功', icon: 'success' })
-        wx.navigateBack()
+        setTimeout(() => wx.navigateBack(), 1000)
       } else {
-        wx.showToast({ title: res.data.detail || '保存失败', icon: 'none' })
+        wx.showToast({ title: res.data?.detail || '保存失败', icon: 'none' })
       }
+    }).catch(() => {
+      wx.showToast({ title: '保存失败', icon: 'none' })
     }).finally(() => this.setData({ saving: false }))
   }
 })

@@ -76,11 +76,10 @@
   font-weight: bold;
 }
 
-.status.pending { color: #fa8c16; }
-.status.paid { color: #52c41a; }
-.status.shipped { color: #1890ff; }
-.status.completed { color: #722ed1; }
-.status.cancelled { color: #f5222d; }
+.status.PENDING_PAYMENT { color: #fa8c16; }
+.status.PENDING_RECEIPT { color: #1296db; }
+.status.COMPLETED { color: #07c160; }
+.status.CANCELLED { color: #999999; }
 
 .time {
   font-size: 28rpx;

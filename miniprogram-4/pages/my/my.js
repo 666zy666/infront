@@ -123,6 +123,10 @@ Page({
     wx.navigateTo({ url: '/pages/profile/change-password' })
   },
 
+  toAddressManage() {
+    wx.navigateTo({ url: '/pages/address/address-list' })
+  },
+
   toSettings() {
     wx.showToast({ title: '设置功能开发中', icon: 'none' })
   }
