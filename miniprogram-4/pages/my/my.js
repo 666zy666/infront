@@ -1,4 +1,5 @@
 // pages/my/my.js
+const { request } = require('../../utils/request.js')   // ← 必须加上这行！
 const app = getApp()
 
 Page({
@@ -11,96 +12,90 @@ Page({
     stats: {
       published: 0,
       favorites: 0,
-      orders: 0,        // 我的订单（买家视角）
-      sellerOrders: 0   // 待处理订单（卖家视角）
+      orders: 0,
+      sellerOrders: 0
     }
   },
 
   onShow() {
     this.checkLoginStatus()
+    this.loadStats()
   },
 
+  // ==================== 登录状态检查 + 头像刷新 ====================
   checkLoginStatus() {
-    const token = wx.getStorageSync('token') || app.globalData.token
-    const userInfo = wx.getStorageSync('userInfo') || {}
+    const token = wx.getStorageSync('token')
+    let userInfo = wx.getStorageSync('userInfo') || {}
 
-    if (token) {
-      this.setData({
-        hasLogin: true,
-        userInfo: {
-          nickName: userInfo.nickName || '用户',
-          avatarUrl: userInfo.avatarUrl || '/images/default-avatar.png'
-        }
-      })
-      this.loadStats()
-    } else {
-      this.setData({
-        hasLogin: false,
-        userInfo: {
-          nickName: '未登录',
-          avatarUrl: '/images/default-avatar.png'
-        },
-        stats: { published: 0, favorites: 0, orders: 0, sellerOrders: 0 }
-      })
+    this.setData({
+      hasLogin: !!token,
+      userInfo: {
+        nickName: userInfo.nickName || userInfo.username || '用户',
+        avatarUrl: userInfo.avatarUrl || '/images/default-avatar.png'
+      }
+    })
+
+    // 如果已登录但头像为空 → 从后端刷新最新头像
+    if (token && !userInfo.avatarUrl) {
+      this.refreshUserInfo(token)
     }
   },
 
-  // 加载所有统计数据
+  // 从后端获取最新用户信息（包含刚上传的头像）
+  refreshUserInfo(token) {
+    request('account/profile/', {
+      header: { 'Authorization': `Token ${token}` }
+    }).then(res => {
+      if (res.statusCode === 200) {
+        const newUserInfo = {
+          nickName: res.data.username || '用户',
+          avatarUrl: res.data.avatar || '/images/default-avatar.png',
+          email: res.data.email,
+          first_name: res.data.first_name
+        }
+        wx.setStorageSync('userInfo', newUserInfo)
+        this.setData({ userInfo: newUserInfo })
+      }
+    }).catch(() => {})
+  },
+
+  // ==================== 统计数据 ====================
   loadStats() {
     const token = wx.getStorageSync('token')
     if (!token) return
 
-    // 我的发布数量
+    // 我的发布
     wx.request({
       url: app.globalData.baseUrl + 'store/my-products/',
       header: { 'Authorization': 'Token ' + token },
-      success: res => {
-        if (res.statusCode === 200) {
-          this.setData({ 'stats.published': res.data.length || 0 })
-        }
-      }
+      success: res => this.setData({ 'stats.published': res.data.length || 0 })
     })
 
-    // 我的收藏数量
+    // 我的收藏
     wx.request({
       url: app.globalData.baseUrl + 'store/favorites/',
       header: { 'Authorization': 'Token ' + token },
-      success: res => {
-        if (res.statusCode === 200) {
-          this.setData({ 'stats.favorites': res.data.length || 0 })
-        }
-      }
+      success: res => this.setData({ 'stats.favorites': res.data.length || 0 })
     })
 
-    // 我的订单数量（买家视角）
+    // 我的订单（买家）
     wx.request({
       url: app.globalData.baseUrl + 'store/orders/my/',
       header: { 'Authorization': 'Token ' + token },
-      success: res => {
-        if (res.statusCode === 200) {
-          this.setData({ 'stats.orders': res.data.length || 0 })
-        }
-      }
+      success: res => this.setData({ 'stats.orders': res.data.length || 0 })
     })
 
-    // 待处理订单数量（卖家视角）
+    // 待处理订单（卖家）
     wx.request({
       url: app.globalData.baseUrl + 'store/orders/seller/',
       header: { 'Authorization': 'Token ' + token },
-      success: res => {
-        if (res.statusCode === 200) {
-          this.setData({ 'stats.sellerOrders': res.data.length || 0 })
-        }
-      }
+      success: res => this.setData({ 'stats.sellerOrders': res.data.length || 0 })
     })
   },
 
-  // 跳转登录
-  toLogin() {
-    wx.navigateTo({ url: '/pages/login/login' })
-  },
+  // ==================== 跳转方法 ====================
+  toLogin() { wx.navigateTo({ url: '/pages/login/login' }) },
 
-  // 退出登录
   logout() {
     wx.showModal({
       title: '确认退出',
@@ -109,45 +104,26 @@ Page({
         if (res.confirm) {
           wx.removeStorageSync('token')
           wx.removeStorageSync('userInfo')
-          app.globalData.token = ''
-          app.globalData.userInfo = null
           this.checkLoginStatus()
         }
       }
     })
   },
 
-  // 跳转页面
-  toMyPublish() {
-    wx.navigateTo({ url: '/pages/my-publish/my-publish' })
+  toMyPublish() { wx.navigateTo({ url: '/pages/my-publish/my-publish' }) },
+  toMyFavorites() { wx.navigateTo({ url: '/pages/my-favorites/my-favorites' }) },
+  toMyOrders() { wx.navigateTo({ url: '/pages/my-orders/my-orders' }) },
+  toSellerOrders() { wx.navigateTo({ url: '/pages/seller-orders/seller-orders' }) },
+
+  editProfile() {
+    wx.navigateTo({ url: '/pages/profile/edit-profile' })
   },
 
-  toMyFavorites() {
-    wx.navigateTo({ url: '/pages/my-favorites/my-favorites' })
-  },
-
-  toMyOrders() {
-    wx.navigateTo({ url: '/pages/my-orders/my-orders' })
-  },
-
-  toSellerOrders() {
-    wx.navigateTo({ url: '/pages/seller-orders/seller-orders' })
+  changePassword() {
+    wx.navigateTo({ url: '/pages/profile/change-password' })
   },
 
   toSettings() {
     wx.showToast({ title: '设置功能开发中', icon: 'none' })
-  },
-  // 个人信息编辑
-editProfile() {
-  wx.navigateTo({
-    url: '/pages/profile/edit-profile'
-  })
-},
-
-// 修改密码
-changePassword() {
-  wx.navigateTo({
-    url: '/pages/profile/change-password'
-  })
-},
+  }
 })

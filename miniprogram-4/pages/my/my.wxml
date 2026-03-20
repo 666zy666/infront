@@ -1,26 +1,27 @@
 <view class="container">
   <!-- 用户信息 -->
-  <view class="user-card">
-    <image 
-      src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" 
-      class="avatar" 
-      mode="aspectFill" 
-    />
-    <view class="user-info">
-      <text class="nickname">{{userInfo.nickName || '未登录用户'}}</text>
-      <text class="welcome">欢迎回来</text>
-    </view>
-    <button 
-      wx:if="{{!hasLogin}}" 
-      class="login-btn" 
-      bindtap="toLogin"
-    >立即登录</button>
-    <button 
-      wx:else 
-      class="logout-btn" 
-      bindtap="logout"
-    >退出登录</button>
+
+<view class="user-card">
+  <image 
+    src="{{userInfo.avatarUrl || '/images/default-avatar.png'}}" 
+    class="avatar" 
+    mode="aspectFill" 
+  />
+  <view class="user-info">
+    <text class="nickname">{{userInfo.nickName || userInfo.username || '未登录用户'}}</text>
+    <text class="welcome">欢迎回来</text>
   </view>
+  <button 
+    wx:if="{{!hasLogin}}" 
+    class="login-btn" 
+    bindtap="toLogin"
+  >立即登录</button>
+  <button 
+    wx:else 
+    class="logout-btn" 
+    bindtap="logout"
+  >退出登录</button>
+</view>
 
   <!-- 统计网格 -->
   <view class="stats-grid">

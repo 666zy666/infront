@@ -1,4 +1,5 @@
 // pages/login/login.js - 终极完整版（支持账号密码 + 微信登录，用户名实时更新）
+const { request } = require('../../utils/request.js')   // ← 必须加上这行！
 const app = getApp()
 
 Page({
@@ -54,6 +55,9 @@ Page({
 
           // 强制跳转到“我的”页面（触发 onShow 刷新用户名）
           wx.reLaunch({ url: '/pages/my/my' })
+
+          // 调用刷新头像方法（修复 this 指向问题）
+          this.refreshFullUserInfo(token)
         } else {
           wx.showToast({ title: res.data.detail || '登录失败', icon: 'none' })
         }
@@ -65,7 +69,27 @@ Page({
     })
   },
 
-  // 微信一键登录（可选，如果你已添加）
+  // ==================== 刷新完整用户信息（包含头像） ====================
+  refreshFullUserInfo(token) {
+    request('account/profile/', {
+      header: { 'Authorization': `Token ${token}` }
+    }).then(res => {
+      if (res.statusCode === 200) {
+        const fullUser = {
+          nickName: res.data.username || '用户',
+          avatarUrl: res.data.avatar || '/images/default-avatar.png',
+          email: res.data.email,
+          first_name: res.data.first_name
+        }
+        wx.setStorageSync('userInfo', fullUser)
+        console.log('✅ 登录后刷新头像成功：', fullUser.avatarUrl)
+      }
+    }).catch(err => {
+      console.log('刷新头像失败', err)
+    })
+  },
+
+  // 微信一键登录（保留你原来的逻辑）
   onWeChatLogin(e) {
     if (e.detail.errMsg !== 'getUserInfo:ok') {
       wx.showToast({ title: '授权失败', icon: 'none' })
@@ -85,7 +109,10 @@ Page({
                 const username = resp.data.username || '微信用户'
 
                 wx.setStorageSync('token', token)
-                wx.setStorageSync('userInfo', { nickName: username, avatarUrl: e.detail.userInfo.avatarUrl || '/images/default-avatar.png' })
+                wx.setStorageSync('userInfo', { 
+                  nickName: username, 
+                  avatarUrl: e.detail.userInfo.avatarUrl || '/images/default-avatar.png' 
+                })
 
                 app.globalData.token = token
 

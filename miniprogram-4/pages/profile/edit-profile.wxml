@@ -1,14 +1,31 @@
 <view class="container">
-  <view class="form-group">
-    <text class="label">用户名</text>
-    <input value="{{user.username}}" disabled class="disabled-input" />
+  <!-- 头像 -->
+  <view class="avatar-section" bindtap="chooseAvatar">
+    <image src="{{user.avatarUrl || '/images/default-avatar.png'}}" class="avatar" mode="aspectFill" />
+    <view class="upload-tip">点击修改头像</view>
   </view>
 
+  <!-- 用户名（管理员禁用） -->
+  <view class="form-group">
+    <text class="label">用户名</text>
+    <input 
+      value="{{user.username}}" 
+      bindinput="inputChange" 
+      data-field="username" 
+      placeholder="请输入用户名"
+      disabled="{{user.is_staff}}"
+      class="{{user.is_staff ? 'disabled-input' : ''}}"
+    />
+    <text wx:if="{{user.is_staff}}" class="admin-tip">管理员用户名不可修改</text>
+  </view>
+
+  <!-- 邮箱 -->
   <view class="form-group">
     <text class="label">邮箱</text>
     <input value="{{user.email}}" bindinput="inputChange" data-field="email" placeholder="请输入邮箱" />
   </view>
 
+  <!-- 姓名 -->
   <view class="form-group">
     <text class="label">姓名</text>
     <input value="{{user.first_name}}" bindinput="inputChange" data-field="first_name" placeholder="请输入姓名" />
