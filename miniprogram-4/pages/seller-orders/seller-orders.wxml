@@ -23,19 +23,14 @@
 
         <!-- 订单状态 -->
         <view class="status-bar">
-          <text class="status {{item.status}}">
-            {{item.status === 'pending' ? '待支付' : 
-              item.status === 'paid' ? '已支付' : 
-              item.status === 'shipped' ? '已发货' : 
-              item.status === 'completed' ? '已完成' : '已取消'}}
-          </text>
-          <text class="time">{{item.created_at | formatDate}}</text>
+          <text class="status {{item._status}}">{{item._statusText}}</text>
+          <text class="time">{{item.created_at}}</text>
         </view>
 
         <!-- 操作按钮区 -->
         <view class="actions">
-          <!-- 已支付 → 发货 -->
-          <view wx:if="{{item.status === 'paid'}}" class="ship-form">
+          <!-- 已支付 → 发货 (PENDING_RECEIPT) -->
+          <view wx:if="{{item._status === 'PENDING_RECEIPT'}}" class="ship-form">
             <input 
               placeholder="物流公司（如：顺丰）" 
               bindinput="inputChange" 
@@ -57,25 +52,17 @@
             >确认发货</button>
           </view>
 
-          <!-- 已发货 → 完成 -->
+          <!-- 待付款 → 取消 -->
           <button 
-            wx:if="{{item.status === 'shipped'}}" 
-            class="complete-btn" 
-            bindtap="completeOrder" 
-            data-id="{{item.id}}"
-          >确认完成</button>
-
-          <!-- 待支付 → 取消 -->
-          <button 
-            wx:if="{{item.status === 'pending'}}" 
+            wx:elif="{{item._status === 'PENDING_PAYMENT'}}" 
             class="cancel-btn" 
             bindtap="cancelOrder" 
             data-id="{{item.id}}"
           >取消订单</button>
 
           <!-- 已完成/已取消 → 无操作 -->
-          <text wx:if="{{item.status === 'completed' || item.status === 'cancelled'}}" class="no-action">
-            {{item.status === 'completed' ? '交易完成' : '订单已取消'}}
+          <text wx:elif="{{item._status === 'COMPLETED' || item._status === 'CANCELLED'}}" class="no-action">
+            {{item._status === 'COMPLETED' ? '交易完成' : '订单已取消'}}
           </text>
         </view>
       </view>

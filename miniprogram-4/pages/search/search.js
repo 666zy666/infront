@@ -32,6 +32,9 @@ Page({
   onLoad(options) {
     console.log('搜索页加载，参数：', options)
   
+    // 加载搜索历史
+    this.loadHistory()
+
     let searchMode = false
     if (options.category || options.keyword) {
       searchMode = true

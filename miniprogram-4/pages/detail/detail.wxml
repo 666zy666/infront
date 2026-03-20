@@ -66,7 +66,7 @@
     <view class="value">
       <text>{{product.contact_type === 'phone' ? '电话' : '微信'}}: {{product.contact_value || '暂无'}}</text>
       <button wx:if="{{product.contact_type === 'phone'}}" bindtap="callSeller">拨打电话</button>
-      <button wx:else bindtap="copyWechat">复制微信</button>
+      <button wx:else bindtap="copyContact">复制微信</button>
     </view>
   </view>
 

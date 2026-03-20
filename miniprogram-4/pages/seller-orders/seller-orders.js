@@ -1,5 +1,6 @@
 // pages/seller-orders/seller-orders.js
 const app = getApp()
+const { STATUS_TEXT, normalizeStatus } = require('../../utils/status-map.js')
 
 Page({
   data: {
@@ -28,7 +29,12 @@ Page({
       success: res => {
         this.setData({ loading: false })
         if (res.statusCode === 200) {
-          this.setData({ orders: res.data })
+          const orders = (res.data || []).map(o => ({
+            ...o,
+            _status: normalizeStatus(o.status),
+            _statusText: STATUS_TEXT[normalizeStatus(o.status)] || o.status
+          }))
+          this.setData({ orders })
         } else {
           wx.showToast({ title: '加载失败', icon: 'none' })
         }

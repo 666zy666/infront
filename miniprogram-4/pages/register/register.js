@@ -34,7 +34,7 @@ Page({
     this.setData({ loading: true })
 
     wx.request({
-      url: 'http://127.0.0.1:8000/api/account/register/',
+      url: app.globalData.baseUrl + 'account/register/',
       method: 'POST',
       data: { username, password, password2, phone },
       success: res => {

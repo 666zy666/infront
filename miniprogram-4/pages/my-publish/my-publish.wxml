@@ -6,7 +6,7 @@
   <view class="list">
     <block wx:for="{{products}}" wx:key="id">
       <view class="item" bindtap="toDetail" data-id="{{item.id}}">
-        <image src="{{item.images[0].image}}" mode="aspectFill" />
+        <image src="{{item.images && item.images.length > 0 ? item.images[0].image : '/images/cat/all.png'}}" mode="aspectFill" />
         <view class="info">
           <text class="title">{{item.title}}</text>
           <text class="price">¥{{item.price}}</text>

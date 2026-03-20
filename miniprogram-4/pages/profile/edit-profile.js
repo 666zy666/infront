@@ -96,7 +96,14 @@ Page({
       }
     }).then(res => {
       if (res.statusCode === 200) {
-        const newInfo = { ...this.data.user, ...res.data }
+        const d = res.data
+        const newInfo = {
+          username: d.username || this.data.user.username,
+          email: d.email || this.data.user.email,
+          first_name: d.first_name || this.data.user.first_name,
+          avatarUrl: d.avatar || this.data.user.avatarUrl,
+          is_staff: d.is_staff || false
+        }
         wx.setStorageSync('userInfo', newInfo)
         app.globalData.userInfo = newInfo
         wx.showToast({ title: '保存成功', icon: 'success' })

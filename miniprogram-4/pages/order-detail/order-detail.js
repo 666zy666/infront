@@ -31,7 +31,17 @@ Page({
             ...o,
             _status,
             _statusText: STATUS_TEXT[_status] || o.status,
-            _statusColor: STATUS_COLOR[_status] || '#999'
+            _statusColor: STATUS_COLOR[_status] || '#999',
+            // Preserve only known display fields to avoid accidental overwrites
+            id: o.id,
+            product_title: o.product_title || o.product_name,
+            product_image: o.product_image,
+            seller_username: o.seller_username || o.seller,
+            price: o.price || o.total_price,
+            created_at: o.created_at,
+            shipping_address: o.shipping_address || o.address,
+            recipient_name: o.recipient_name || o.address_name,
+            recipient_phone: o.recipient_phone || o.address_phone
           }
         })
       } else {
