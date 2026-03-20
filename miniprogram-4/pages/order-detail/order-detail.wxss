@@ -1,0 +1,157 @@
+.container {
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding-bottom: 160rpx;
+}
+
+.status-card {
+  background: #1296db;
+  padding: 50rpx 40rpx 40rpx;
+  color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.status-text {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #fff !important;
+  display: block;
+  margin-bottom: 16rpx;
+}
+
+.order-no, .order-time {
+  font-size: 26rpx;
+  opacity: 0.85;
+  display: block;
+  margin-top: 8rpx;
+}
+
+.section {
+  background: #fff;
+  border-radius: 20rpx;
+  margin: 0 20rpx 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+
+.product-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.thumb {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  margin-right: 24rpx;
+  background: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.product-info { flex: 1; }
+
+.product-title {
+  font-size: 32rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.product-price {
+  font-size: 36rpx;
+  color: #ff5000;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.product-seller {
+  font-size: 26rpx;
+  color: #999;
+  display: block;
+}
+
+.address-name, .address-phone {
+  font-size: 30rpx;
+  color: #333;
+  display: inline-block;
+  margin-right: 20rpx;
+}
+
+.address-detail {
+  font-size: 28rpx;
+  color: #666;
+  display: block;
+  margin-top: 12rpx;
+}
+
+.amount-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 0;
+  font-size: 28rpx;
+  color: #666;
+}
+
+.amount-row.total {
+  border-top: 1rpx solid #f0f0f0;
+  margin-top: 12rpx;
+  padding-top: 20rpx;
+}
+
+.amount-total {
+  font-size: 36rpx;
+  color: #ff5000;
+  font-weight: bold;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 20rpx 30rpx;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+  box-shadow: 0 -2rpx 12rpx rgba(0,0,0,0.06);
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+}
+
+.btn {
+  font-size: 28rpx;
+  padding: 18rpx 48rpx;
+  border-radius: 50rpx;
+  line-height: 1.4;
+  border: none;
+}
+
+.btn-pay { background: #1296db; color: #fff; }
+.btn-cancel { background: #fff; color: #666; border: 2rpx solid #ddd; }
+.btn-confirm { background: #07c160; color: #fff; }
+.btn-back-plain { background: #fff; color: #1296db; border: 2rpx solid #1296db; }
+
+.loading, .empty {
+  text-align: center;
+  padding: 200rpx 0;
+  color: #999;
+  font-size: 30rpx;
+}
+
+.btn-back {
+  margin-top: 30rpx;
+  background: #1296db;
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 16rpx 60rpx;
+}

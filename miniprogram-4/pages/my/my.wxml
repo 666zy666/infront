@@ -74,6 +74,12 @@
       <text>修改密码</text>
     </view>
 
+    <!-- 地址管理 -->
+    <view class="menu-item" hover-class="hover" bindtap="toAddressManage">
+      <icon type="location" size="56" color="#1296db" />
+      <text>地址管理</text>
+    </view>
+
     <view class="menu-item" hover-class="hover" bindtap="toSettings">
       <icon type="setting" size="56" color="#969799" />
       <text>设置</text>

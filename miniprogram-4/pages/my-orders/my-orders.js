@@ -1,106 +1,138 @@
 // pages/my-orders/my-orders.js
-const app = getApp()
+const { getOrders, payOrder, cancelOrder, confirmReceipt } = require('../../api/order.js')
+const { STATUS_TEXT, STATUS_COLOR, STATUS_TABS, normalizeStatus } = require('../../utils/status-map.js')
 
 Page({
   data: {
+    tabs: STATUS_TABS,
+    currentTab: 0,
+    currentStatus: '',
     orders: [],
-    loading: true
+    loading: false,
+    STATUS_TEXT,
+    STATUS_COLOR
   },
 
-  onLoad() {
+  onLoad(options) {
+    // 支持从外部跳转时指定初始 tab
+    if (options.status) {
+      const idx = STATUS_TABS.findIndex(t => t.key === options.status)
+      if (idx >= 0) {
+        this.setData({ currentTab: idx, currentStatus: options.status })
+      }
+    }
     this.loadOrders()
   },
 
   onShow() {
-    this.loadOrders()  // 每次进入页面刷新
+    this.loadOrders()
+  },
+
+  // Tab 切换
+  switchTab(e) {
+    const idx = e.currentTarget.dataset.index
+    const status = STATUS_TABS[idx].key
+    this.setData({ currentTab: idx, currentStatus: status })
+    this.loadOrders()
   },
 
   loadOrders() {
     const token = wx.getStorageSync('token')
     if (!token) {
       wx.showToast({ title: '请先登录', icon: 'none' })
-      this.setData({ loading: false })
       wx.navigateTo({ url: '/pages/login/login' })
       return
     }
 
     this.setData({ loading: true })
 
-    wx.request({
-      url: app.globalData.baseUrl + 'store/orders/my/',
-      header: { 'Authorization': 'Token ' + token },
+    getOrders(this.data.currentStatus).then(res => {
+      this.setData({ loading: false })
+      if (res.statusCode === 200) {
+        // 规范化状态字段，兼容后端旧字段
+        const orders = (res.data || []).map(o => ({
+          ...o,
+          _status: normalizeStatus(o.status),
+          _statusText: STATUS_TEXT[normalizeStatus(o.status)] || o.status,
+          _statusColor: STATUS_COLOR[normalizeStatus(o.status)] || '#999'
+        }))
+        this.setData({ orders })
+      } else {
+        wx.showToast({ title: '加载失败', icon: 'none' })
+      }
+    }).catch(() => {
+      this.setData({ loading: false })
+    })
+  },
+
+  // 查看订单详情
+  toOrderDetail(e) {
+    const id = e.currentTarget.dataset.id
+    wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${id}` })
+  },
+
+  // 支付订单
+  handlePay(e) {
+    const id = e.currentTarget.dataset.id
+    wx.showModal({
+      title: '确认支付',
+      content: '确定支付该订单？',
       success: res => {
-        this.setData({ loading: false })
-        if (res.statusCode === 200) {
-          this.setData({ orders: res.data })
-        } else {
-          wx.showToast({ title: '加载失败', icon: 'none' })
-        }
-      },
-      fail: () => {
-        this.setData({ loading: false })
-        wx.showToast({ title: '网络错误', icon: 'none' })
+        if (!res.confirm) return
+        wx.showLoading({ title: '支付中...' })
+        payOrder(id).then(res => {
+          wx.hideLoading()
+          if (res.statusCode === 200) {
+            wx.showToast({ title: '支付成功', icon: 'success' })
+            this.loadOrders()
+          } else {
+            wx.showToast({ title: res.data?.detail || '支付失败', icon: 'none' })
+          }
+        }).catch(() => wx.hideLoading())
       }
     })
   },
 
-  // 查看订单详情（可扩展为新页面）
-  toOrderDetail(e) {
+  // 取消订单
+  handleCancel(e) {
     const id = e.currentTarget.dataset.id
-    wx.navigateTo({
-      url: `/pages/order-detail/order-detail?id=${id}`
+    wx.showModal({
+      title: '取消订单',
+      content: '确定取消该订单？取消后无法恢复。',
+      success: res => {
+        if (!res.confirm) return
+        wx.showLoading({ title: '处理中...' })
+        cancelOrder(id).then(res => {
+          wx.hideLoading()
+          if (res.statusCode === 200) {
+            wx.showToast({ title: '订单已取消', icon: 'success' })
+            this.loadOrders()
+          } else {
+            wx.showToast({ title: res.data?.detail || '取消失败', icon: 'none' })
+          }
+        }).catch(() => wx.hideLoading())
+      }
     })
   },
 
-  // 查看物流（示例，可对接物流查询接口）
-  viewTracking(e) {
-    const id = e.currentTarget.dataset.id
-    const order = this.data.orders.find(o => o.id === id)
-    if (order.tracking_number) {
-      wx.showModal({
-        title: '物流信息',
-        content: `物流公司：${order.shipping_company || '未知'}\n单号：${order.tracking_number}`,
-        showCancel: false
-      })
-    } else {
-      wx.showToast({ title: '暂无物流信息', icon: 'none' })
-    }
-  },
-
   // 确认收货
-  confirmReceive(e) {
+  handleConfirm(e) {
     const id = e.currentTarget.dataset.id
-
     wx.showModal({
       title: '确认收货',
-      content: '确认已收到货物并完成交易？',
+      content: '确认已收到货物？',
       success: res => {
-        if (res.confirm) {
-          wx.showLoading({ title: '处理中...' })
-
-          wx.request({
-            url: app.globalData.baseUrl + `store/orders/${id}/`,
-            method: 'PATCH',
-            data: { action: 'complete' },
-            header: {
-              'Authorization': 'Token ' + wx.getStorageSync('token'),
-              'Content-Type': 'application/json'
-            },
-            success: res => {
-              wx.hideLoading()
-              if (res.statusCode === 200) {
-                wx.showToast({ title: '已确认收货', icon: 'success' })
-                this.loadOrders()  // 刷新列表
-              } else {
-                wx.showToast({ title: res.data.detail || '操作失败', icon: 'none' })
-              }
-            },
-            fail: () => {
-              wx.hideLoading()
-              wx.showToast({ title: '网络错误', icon: 'none' })
-            }
-          })
-        }
+        if (!res.confirm) return
+        wx.showLoading({ title: '处理中...' })
+        confirmReceipt(id).then(res => {
+          wx.hideLoading()
+          if (res.statusCode === 200) {
+            wx.showToast({ title: '确认收货成功', icon: 'success' })
+            this.loadOrders()
+          } else {
+            wx.showToast({ title: res.data?.detail || '操作失败', icon: 'none' })
+          }
+        }).catch(() => wx.hideLoading())
       }
     })
   },

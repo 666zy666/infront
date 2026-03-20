@@ -12,7 +12,10 @@
     "pages/my-orders/my-orders",
     "pages/seller-orders/seller-orders",
     "pages/profile/edit-profile",
-    "pages/profile/change-password"
+    "pages/profile/change-password",
+    "pages/order-detail/order-detail",
+    "pages/address/address-list",
+    "pages/address/address-edit"
    
     
 
