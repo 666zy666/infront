@@ -66,7 +66,7 @@
         <view class="actions">
           <button class="action-btn detail-btn" bindtap="toDetail" data-id="{{item.id}}">查看详情</button>
           <button
-            wx:if="{{item._status === 'PENDING_PAYMENT'}}"
+            wx:if="{{item._status === 'PENDING_PAYMENT' || item._status === 'PENDING_RECEIPT'}}"
             class="action-btn cancel-btn"
             bindtap="handleAction"
             data-id="{{item.id}}"

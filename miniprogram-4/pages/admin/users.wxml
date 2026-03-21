@@ -52,5 +52,12 @@
       <text class="empty-icon">👥</text>
       <text class="empty-text">{{keyword ? '未找到匹配用户' : '暂无用户数据'}}</text>
     </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{users.length > 0}}" class="load-more">
+      <view wx:if="{{loadingMore}}" class="loading-more-text">加载中...</view>
+      <view wx:elif="{{hasMore}}" class="load-more-btn" bindtap="loadMore">加载更多</view>
+      <view wx:else class="no-more-text">已显示全部用户</view>
+    </view>
   </view>
 </view>

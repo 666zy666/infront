@@ -99,6 +99,25 @@
   margin-bottom: 10rpx;
 }
 
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+  gap: 12rpx;
+}
+
+.title-row .product-title {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.status-badge {
+  font-size: 24rpx;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
 .product-price {
   font-size: 32rpx;
   font-weight: bold;
@@ -164,4 +183,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 30rpx 0 10rpx;
+}
+
+.loading-more-text {
+  color: #999;
+  font-size: 28rpx;
+}
+
+.load-more-btn {
+  color: #1296db;
+  font-size: 28rpx;
+  padding: 16rpx 40rpx;
+  display: inline-block;
+}
+
+.no-more-text {
+  color: #ccc;
+  font-size: 26rpx;
 }

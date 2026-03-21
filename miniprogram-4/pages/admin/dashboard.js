@@ -17,28 +17,45 @@ Page({
   },
 
   onLoad() {
-    this.checkAdmin()
+    if (!this.checkAdmin()) return
+    this.loadData()
   },
 
   onShow() {
+    if (!this._isAdmin) return
     this.loadData()
-  },  checkAdmin() {
+  },
+
+  onPullDownRefresh() {
+    if (!this._isAdmin) {
+      wx.stopPullDownRefresh()
+      return
+    }
+    this.loadData().then(() => wx.stopPullDownRefresh()).catch(() => wx.stopPullDownRefresh())
+  },
+
+  checkAdmin() {
     const token = wx.getStorageSync('token')
     if (!token) {
       wx.showToast({ title: '请先登录', icon: 'none' })
       setTimeout(() => wx.navigateBack(), 1000)
-      return
+      this._isAdmin = false
+      return false
     }
     const userInfo = wx.getStorageSync('userInfo') || {}
     if (!userInfo.is_staff) {
       wx.showToast({ title: '需要管理员权限', icon: 'none' })
       setTimeout(() => wx.navigateBack(), 1500)
+      this._isAdmin = false
+      return false
     }
+    this._isAdmin = true
+    return true
   },
 
   loadData() {
     this.setData({ loading: true })
-    getAdminStats().then(stats => {
+    const statsPromise = getAdminStats().then(stats => {
       this.setData({ stats, loading: false })
     }).catch(() => {
       this.setData({ loading: false })
@@ -46,7 +63,7 @@ Page({
 
     // 加载最近订单（卖家视图）
     const token = wx.getStorageSync('token')
-    if (token) {
+    const ordersPromise = token ? new Promise(resolve => {
       wx.request({
         url: app.globalData.baseUrl + 'store/orders/seller/',
         header: { Authorization: 'Token ' + token },
@@ -60,9 +77,13 @@ Page({
             }))
             this.setData({ recentOrders: orders })
           }
-        }
+          resolve()
+        },
+        fail: resolve
       })
-    }
+    }) : Promise.resolve()
+
+    return Promise.all([statsPromise, ordersPromise])
   },
 
   toUsers() { wx.navigateTo({ url: '/pages/admin/users' }) },

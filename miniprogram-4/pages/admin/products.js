@@ -7,11 +7,24 @@ Page({
     products: [],
     loading: false,
     keyword: '',
-    deleting: false
+    deleting: false,
+    nextUrl: null,
+    hasMore: false,
+    loadingMore: false
   },
 
   onShow() {
     this.loadProducts()
+  },
+
+  onPullDownRefresh() {
+    this.loadProducts().then(() => wx.stopPullDownRefresh()).catch(() => wx.stopPullDownRefresh())
+  },
+
+  onReachBottom() {
+    if (this.data.hasMore && !this.data.loadingMore) {
+      this.loadMore()
+    }
   },
 
   inputKeyword(e) {
@@ -27,20 +40,46 @@ Page({
     this.loadProducts()
   },
 
+  normalizeImage(url) {
+    if (!url) return '/images/cat/all.png'
+    if (/^https?:\/\//.test(url)) return url
+    if (/^\/media\//.test(url)) {
+      return app.globalData.baseUrl.replace(/\/api\/?$/, '') + url
+    }
+    return url
+  },
+
+  _processProducts(list) {
+    return list.map(p => ({
+      ...p,
+      _imageUrl: this.normalizeImage(
+        p.image || (p.images && p.images[0] && p.images[0].image) || ''
+      ),
+      _statusText: p.is_active === false ? '已下架' : '在售',
+      _statusColor: p.is_active === false ? '#999' : '#07c160'
+    }))
+  },
+
   loadProducts() {
     const token = wx.getStorageSync('token')
     if (!token) {
       wx.showToast({ title: '请先登录', icon: 'none' })
       wx.navigateBack()
-      return
+      return Promise.resolve()
     }
 
-    this.setData({ loading: true })
-    getAllProducts(this.data.keyword).then(res => {
+    this.setData({ loading: true, nextUrl: null, hasMore: false })
+    return getAllProducts(this.data.keyword).then(res => {
       this.setData({ loading: false })
       if (res.statusCode === 200) {
-        const list = Array.isArray(res.data) ? res.data : (res.data.results || [])
-        this.setData({ products: list })
+        const body = res.data
+        const raw = Array.isArray(body) ? body : (body.results || [])
+        const nextUrl = (!Array.isArray(body) && body.next) ? body.next : null
+        this.setData({
+          products: this._processProducts(raw),
+          nextUrl,
+          hasMore: !!nextUrl
+        })
       } else {
         wx.showToast({ title: '加载失败', icon: 'none' })
       }
@@ -50,13 +89,30 @@ Page({
     })
   },
 
-  normalizeImage(url) {
-    if (!url) return '/images/cat/all.png'
-    if (/^https?:\/\//.test(url)) return url
-    if (/^\/media\//.test(url)) {
-      return app.globalData.baseUrl.replace(/\/api\/?$/, '') + url
-    }
-    return url
+  loadMore() {
+    if (!this.data.nextUrl || this.data.loadingMore) return
+    this.setData({ loadingMore: true })
+    const token = wx.getStorageSync('token')
+    wx.request({
+      url: this.data.nextUrl,
+      header: { Authorization: token ? 'Token ' + token : '' },
+      success: res => {
+        if (res.statusCode === 200) {
+          const body = res.data
+          const raw = Array.isArray(body) ? body : (body.results || [])
+          const nextUrl = (!Array.isArray(body) && body.next) ? body.next : null
+          this.setData({
+            products: this.data.products.concat(this._processProducts(raw)),
+            nextUrl,
+            hasMore: !!nextUrl,
+            loadingMore: false
+          })
+        } else {
+          this.setData({ loadingMore: false })
+        }
+      },
+      fail: () => this.setData({ loadingMore: false })
+    })
   },
 
   toDetail(e) {

@@ -160,3 +160,26 @@
   font-size: 32rpx;
   color: #bbb;
 }
+
+/* 加载更多 */
+.load-more {
+  text-align: center;
+  padding: 30rpx 0 10rpx;
+}
+
+.loading-more-text {
+  color: #999;
+  font-size: 28rpx;
+}
+
+.load-more-btn {
+  color: #1296db;
+  font-size: 28rpx;
+  padding: 16rpx 40rpx;
+  display: inline-block;
+}
+
+.no-more-text {
+  color: #ccc;
+  font-size: 26rpx;
+}

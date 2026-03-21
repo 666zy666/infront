@@ -18,6 +18,10 @@ Page({
     this.loadOrders()
   },
 
+  onPullDownRefresh() {
+    this.loadOrders().then(() => wx.stopPullDownRefresh()).catch(() => wx.stopPullDownRefresh())
+  },
+
   inputKeyword(e) {
     this.setData({ keyword: e.detail.value })
   },
@@ -47,7 +51,7 @@ Page({
     }
 
     this.setData({ loading: true })
-    getAllOrders(this.data.currentStatus, this.data.keyword).then(res => {
+    return getAllOrders(this.data.currentStatus, this.data.keyword).then(res => {
       this.setData({ loading: false })
       if (res.statusCode === 200) {
         let orders = Array.isArray(res.data) ? res.data : (res.data.results || [])
