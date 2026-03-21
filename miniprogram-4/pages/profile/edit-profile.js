@@ -8,6 +8,7 @@ Page({
       username: '',
       email: '',
       first_name: '',
+      phone: '',
       avatarUrl: ''
     },
     saving: false
@@ -27,6 +28,7 @@ Page({
               username: d.username || userInfo.username || '',
               email: d.email || userInfo.email || '',
               first_name: d.first_name || userInfo.first_name || '',
+              phone: d.phone || userInfo.phone || '',
               avatarUrl: d.avatar || userInfo.avatarUrl || '',
               is_staff: d.is_staff || false
             }
@@ -99,7 +101,8 @@ Page({
       data: {
         username: this.data.user.username,
         email: this.data.user.email,
-        first_name: this.data.user.first_name
+        first_name: this.data.user.first_name,
+        phone: this.data.user.phone
       }
     }).then(res => {
       if (res.statusCode === 200) {
@@ -108,6 +111,7 @@ Page({
           username: d.username || this.data.user.username,
           email: d.email || this.data.user.email,
           first_name: d.first_name || this.data.user.first_name,
+          phone: d.phone || this.data.user.phone,
           avatarUrl: d.avatar || this.data.user.avatarUrl,
           is_staff: d.is_staff || false
         }

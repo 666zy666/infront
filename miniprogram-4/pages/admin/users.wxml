@@ -1,0 +1,56 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <input
+        class="search-input"
+        placeholder="搜索用户名 / 邮箱 / 手机号"
+        value="{{keyword}}"
+        bindinput="inputKeyword"
+        confirm-type="search"
+        bindconfirm="search"
+      />
+      <text wx:if="{{keyword}}" class="clear-btn" bindtap="clearSearch">✕</text>
+    </view>
+    <button class="search-btn" bindtap="search">搜索</button>
+  </view>
+
+  <!-- Mock 提示 -->
+  <view wx:if="{{isMock}}" class="mock-tip">
+    ⚠️ 当前显示示例数据（后端用户管理接口未就绪）
+  </view>
+
+  <!-- 统计 -->
+  <view class="list-header">
+    <text class="count-text">共 {{users.length}} 位用户</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <!-- 用户列表 -->
+  <view wx:else class="user-list">
+    <block wx:for="{{users}}" wx:key="id">
+      <view class="user-card">
+        <view class="user-avatar">
+          <text class="avatar-letter">{{item.username[0] || '?'}}</text>
+        </view>
+        <view class="user-info">
+          <view class="user-row">
+            <text class="username">{{item.username}}</text>
+            <view wx:if="{{item.is_staff}}" class="admin-badge">管理员</view>
+          </view>
+          <text wx:if="{{item.email}}" class="user-meta">📧 {{item.email}}</text>
+          <text wx:if="{{item.phone}}" class="user-meta">📱 {{item.phone}}</text>
+          <text wx:if="{{item.date_joined}}" class="user-meta">📅 注册：{{item.date_joined}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{users.length === 0}}" class="empty">
+      <text class="empty-icon">👥</text>
+      <text class="empty-text">{{keyword ? '未找到匹配用户' : '暂无用户数据'}}</text>
+    </view>
+  </view>
+</view>

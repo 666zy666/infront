@@ -1,0 +1,193 @@
+.container {
+  background: #f0f2f5;
+  min-height: 100vh;
+  padding-bottom: 60rpx;
+}
+
+/* 顶部横幅 */
+.header-banner {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 60rpx 40rpx 50rpx;
+  color: #fff;
+}
+
+.header-title {
+  font-size: 52rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+}
+
+.header-sub {
+  font-size: 28rpx;
+  opacity: 0.7;
+}
+
+/* Mock 提示 */
+.mock-tip {
+  background: #fff3cd;
+  color: #856404;
+  font-size: 26rpx;
+  padding: 20rpx 30rpx;
+  margin: 20rpx 30rpx 0;
+  border-radius: 12rpx;
+  border: 1rpx solid #ffc107;
+}
+
+/* Section 公共 */
+.stats-section, .nav-section, .recent-section {
+  margin: 30rpx 30rpx 0;
+}
+
+.section-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  padding-left: 10rpx;
+  border-left: 6rpx solid #1296db;
+}
+
+.loading-text {
+  text-align: center;
+  color: #999;
+  padding: 40rpx;
+  font-size: 30rpx;
+}
+
+/* 统计卡片 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20rpx;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.06);
+}
+
+.stat-icon {
+  font-size: 60rpx;
+  margin-bottom: 16rpx;
+}
+
+.stat-num {
+  font-size: 56rpx;
+  font-weight: bold;
+  color: #1296db;
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 26rpx;
+  color: #666;
+}
+
+/* 功能入口 */
+.nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20rpx;
+}
+
+.nav-item {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 34rpx 20rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.06);
+}
+
+.nav-icon {
+  font-size: 70rpx;
+  margin-bottom: 14rpx;
+  display: block;
+}
+
+.nav-label {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.nav-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 最近订单 */
+.empty-tip {
+  text-align: center;
+  color: #bbb;
+  font-size: 30rpx;
+  padding: 40rpx 0;
+}
+
+.recent-order {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 28rpx 30rpx;
+  margin-bottom: 16rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+}
+
+.order-left {
+  flex: 1;
+  overflow: hidden;
+  margin-right: 20rpx;
+}
+
+.order-no {
+  font-size: 26rpx;
+  color: #999;
+  margin-bottom: 8rpx;
+}
+
+.order-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.order-buyer {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.order-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.order-price {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #ff5000;
+  margin-bottom: 10rpx;
+}
+
+.order-status {
+  font-size: 26rpx;
+  font-weight: bold;
+}
+
+.view-all {
+  text-align: center;
+  padding: 24rpx 0 0;
+  color: #1296db;
+  font-size: 28rpx;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
