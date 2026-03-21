@@ -33,14 +33,20 @@ const STATUS_TABS = [
  * 将后端可能存在的旧状态字段映射到新枚举
  * 兼容旧字段: pending->PENDING_PAYMENT, paid->PENDING_RECEIPT, shipped->PENDING_RECEIPT,
  *             completed->COMPLETED, cancelled->CANCELLED
+ * 兼容后端小写字段: pending_payment->PENDING_PAYMENT, pending_receipt->PENDING_RECEIPT
  */
 function normalizeStatus(status) {
   const map = {
+    // 旧字段
     pending: 'PENDING_PAYMENT',
     paid: 'PENDING_RECEIPT',
     shipped: 'PENDING_RECEIPT',
     completed: 'COMPLETED',
     cancelled: 'CANCELLED',
+    // 后端当前小写字段
+    pending_payment: 'PENDING_PAYMENT',
+    pending_receipt: 'PENDING_RECEIPT',
+    // 已经是大写的直接返回
     PENDING_PAYMENT: 'PENDING_PAYMENT',
     PENDING_RECEIPT: 'PENDING_RECEIPT',
     COMPLETED: 'COMPLETED',
