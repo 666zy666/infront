@@ -42,29 +42,36 @@ Page({
       count: 1,
       sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
-      success: res => {
+      success: async (res) => {
         const tempFilePath = res.tempFilePaths[0]
-        wx.showLoading({ title: '上传头像...' })
-
         const token = wx.getStorageSync('token')
-
+        if (!token) {
+          wx.showToast({ title: '请先登录', icon: 'none' })
+          return
+        }
+  
+        wx.showLoading({ title: '上传中', mask: true })
+  
         wx.uploadFile({
-          url: app.globalData.baseUrl + 'account/profile/',
+          url: app.globalData.baseUrl + 'account/avatar/', // 改成专用接口
           filePath: tempFilePath,
           name: 'avatar',
-          header: { 'Authorization': `Token ${token}` },
-          success: uploadRes => {
+          header: {
+            Authorization: `Token ${token}`
+          },
+          success: (uploadRes) => {
             try {
-              const data = JSON.parse(uploadRes.data)
-              if (uploadRes.statusCode === 200 && data.avatar) {
+              const data = JSON.parse(uploadRes.data || '{}')
+              if (uploadRes.statusCode >= 200 && uploadRes.statusCode < 300 && data.avatar) {
                 this.setData({ 'user.avatarUrl': data.avatar })
-                wx.setStorageSync('userInfo', { ...this.data.user, avatarUrl: data.avatar })
-                wx.showToast({ title: '头像上传成功', icon: 'success' })
+                const userInfo = wx.getStorageSync('userInfo') || {}
+                wx.setStorageSync('userInfo', { ...userInfo, avatarUrl: data.avatar })
+                wx.showToast({ title: '上传成功', icon: 'success' })
               } else {
                 wx.showToast({ title: data.detail || '上传失败', icon: 'none' })
               }
             } catch (e) {
-              wx.showToast({ title: '服务器返回异常', icon: 'none' })
+              wx.showToast({ title: '返回解析失败', icon: 'none' })
             }
           },
           fail: () => wx.showToast({ title: '网络错误', icon: 'none' }),
@@ -88,7 +95,7 @@ Page({
     this.setData({ saving: true })
 
     request('account/profile/', {
-      method: 'PATCH',
+      method: 'PUT',
       data: {
         username: this.data.user.username,
         email: this.data.user.email,

@@ -16,15 +16,23 @@ function _req(url, options = {}) {
         if (res.statusCode === 401) {
           wx.removeStorageSync('token')
           app.globalData.token = ''
-          wx.showToast({ title: '登录过期，请重新登录', icon: 'none' })
-          wx.navigateTo({ url: '/pages/login/login' })
+          wx.showToast({
+            title: '登录过期，请重新登录',
+            icon: 'none'
+          })
+          wx.navigateTo({
+            url: '/pages/login/login'
+          })
           reject(new Error('未授权'))
           return
         }
         resolve(res)
       },
       fail(err) {
-        wx.showToast({ title: '网络错误', icon: 'none' })
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        })
         reject(err)
       }
     })
@@ -39,17 +47,23 @@ function getOrders(status) {
 
 /** 支付订单 */
 function payOrder(id) {
-  return _req(`store/orders/${id}/pay/`, { method: 'POST' })
+  return _req(`store/orders/${id}/pay/`, {
+    method: 'POST'
+  })
 }
 
 /** 取消订单 */
 function cancelOrder(id) {
-  return _req(`store/orders/${id}/cancel/`, { method: 'POST' })
+  return _req(`store/orders/${id}/cancel/`, {
+    method: 'POST'
+  })
 }
 
 /** 确认收货 */
 function confirmReceipt(id) {
-  return _req(`store/orders/${id}/confirm/`, { method: 'POST' })
+  return _req(`store/orders/${id}/confirm/`, {
+    method: 'POST'
+  })
 }
 
 /** 获取订单详情 */
@@ -57,4 +71,10 @@ function getOrderDetail(id) {
   return _req(`store/orders/${id}/`)
 }
 
-module.exports = { getOrders, payOrder, cancelOrder, confirmReceipt, getOrderDetail }
+module.exports = {
+  getOrders,
+  payOrder,
+  cancelOrder,
+  confirmReceipt,
+  getOrderDetail
+}
