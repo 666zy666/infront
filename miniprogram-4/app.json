@@ -15,11 +15,11 @@
     "pages/profile/change-password",
     "pages/order-detail/order-detail",
     "pages/address/address-list",
-    "pages/address/address-edit"
-   
-    
-
-
+    "pages/address/address-edit",
+    "pages/admin/dashboard",
+    "pages/admin/users",
+    "pages/admin/products",
+    "pages/admin/orders"
   ],
   "window": {
     "backgroundTextStyle": "light",

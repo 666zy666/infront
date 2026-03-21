@@ -6,7 +6,8 @@ Page({
     hasLogin: false,
     userInfo: {
       nickName: '未登录',
-      avatarUrl: '/images/default-avatar.png'
+      avatarUrl: '/images/default-avatar.png',
+      is_staff: false
     },
     stats: {
       published: 0,
@@ -39,7 +40,8 @@ Page({
       hasLogin: !!token,
       userInfo: {
         nickName: userInfo.nickName || userInfo.username || '用户',
-        avatarUrl: localAvatar
+        avatarUrl: localAvatar,
+        is_staff: userInfo.is_staff || false
       }
     })
 
@@ -63,7 +65,8 @@ Page({
           username: d.username || '用户',
           avatarUrl: this.normalizeAvatar(avatarRaw),
           email: d.email || '',
-          first_name: d.first_name || ''
+          first_name: d.first_name || '',
+          is_staff: d.is_staff || false
         }
   
         console.log('avatarRaw=', avatarRaw)
@@ -129,5 +132,6 @@ Page({
   editProfile() { wx.navigateTo({ url: '/pages/profile/edit-profile' }) },
   changePassword() { wx.navigateTo({ url: '/pages/profile/change-password' }) },
   toAddressManage() { wx.navigateTo({ url: '/pages/address/address-list' }) },
-  toSettings() { wx.showToast({ title: '设置功能开发中', icon: 'none' }) }
+  toSettings() { wx.showToast({ title: '设置功能开发中', icon: 'none' }) },
+  toAdmin() { wx.navigateTo({ url: '/pages/admin/dashboard' }) }
 })

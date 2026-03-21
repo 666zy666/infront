@@ -109,3 +109,13 @@
   width: 70rpx;
   text-align: center;
 }
+/* 管理员后台入口 */
+.admin-item {
+  background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+  color: #fff;
+  border-bottom: none;
+}
+
+.admin-item text {
+  color: #fff;
+}

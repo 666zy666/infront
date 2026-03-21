@@ -1,0 +1,92 @@
+<view class="container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <input
+        class="search-input"
+        placeholder="搜索订单号 / 买家 / 商品名"
+        value="{{keyword}}"
+        bindinput="inputKeyword"
+        confirm-type="search"
+        bindconfirm="search"
+      />
+      <text wx:if="{{keyword}}" class="clear-btn" bindtap="clearSearch">✕</text>
+    </view>
+    <button class="search-btn" bindtap="search">搜索</button>
+  </view>
+
+  <!-- 状态 Tab -->
+  <scroll-view class="tab-bar" scroll-x="true">
+    <view class="tab-list">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="key"
+        class="tab-item {{currentTab === index ? 'active' : ''}}"
+        bindtap="switchTab"
+        data-index="{{index}}"
+      >{{item.label}}</view>
+    </view>
+  </scroll-view>
+
+  <!-- 统计 -->
+  <view class="list-header">
+    <text class="count-text">共 {{orders.length}} 条订单</text>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <!-- 订单列表 -->
+  <view wx:else class="order-list">
+    <block wx:for="{{orders}}" wx:key="id">
+      <view class="order-card">
+        <!-- 订单头部 -->
+        <view class="card-header">
+          <text class="order-no">订单 #{{item.id}}</text>
+          <text class="order-status" style="color: {{item._statusColor}}">{{item._statusText}}</text>
+        </view>
+
+        <!-- 商品信息 -->
+        <view class="product-row" bindtap="toDetail" data-id="{{item.id}}">
+          <image
+            src="{{item.product_image || '/images/cat/all.png'}}"
+            class="product-thumb"
+            mode="aspectFill"
+          />
+          <view class="product-info">
+            <text class="product-title ellipsis">{{item.product_title || item.product_name || '商品'}}</text>
+            <text class="order-buyer">买家：{{item.buyer || item.buyer_username || '匿名'}}</text>
+            <text class="order-seller">卖家：{{item.seller_username || item.seller || '匿名'}}</text>
+            <text class="order-price">¥{{item.price || item.total_price}}</text>
+            <text class="order-time">{{item.created_at}}</text>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="actions">
+          <button class="action-btn detail-btn" bindtap="toDetail" data-id="{{item.id}}">查看详情</button>
+          <button
+            wx:if="{{item._status === 'PENDING_PAYMENT' || item._status === 'PENDING_RECEIPT'}}"
+            class="action-btn cancel-btn"
+            bindtap="handleAction"
+            data-id="{{item.id}}"
+            data-action="cancel"
+          >取消订单</button>
+          <button
+            wx:if="{{item._status === 'PENDING_RECEIPT'}}"
+            class="action-btn complete-btn"
+            bindtap="handleAction"
+            data-id="{{item.id}}"
+            data-action="complete"
+          >完成订单</button>
+        </view>
+      </view>
+    </block>
+
+    <!-- 空状态 -->
+    <view wx:if="{{orders.length === 0}}" class="empty">
+      <text class="empty-icon">🛒</text>
+      <text class="empty-text">{{keyword ? '未找到匹配订单' : '暂无订单数据'}}</text>
+    </view>
+  </view>
+</view>
